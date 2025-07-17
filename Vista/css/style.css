@@ -1,0 +1,152 @@
+header {
+    position: fixed; /* Fija el header en la parte superior */
+    top: 0; /* Asegúrate de que esté en la parte superior */
+    left: 0; /* Alinea el header con el lado izquierdo */
+    width: 100%; /* Asegúrate de que ocupe todo el ancho */
+    background-color: rgb(255, 255, 255); /* Cambia según tu diseño */
+    z-index: 1000; /* Mantiene el header por encima de otros elementos */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra opcional */
+}
+
+body {
+    margin: 0;
+    background-color: #636262; /* Fondo gris claro */
+    box-sizing: border-box; /* Asegura que el contorno no rompa el diseño */
+}
+
+
+.page-specific p {
+  color:black; /* Color blanco para el texto de los párrafos */
+}
+
+.page-specific a {
+  color: black; /* Color blanco para los enlaces */
+}
+
+/* Si también quieres cambiar el color de los enlaces al pasar el mouse */
+.page-specific a:hover {
+  color: blue; /* Cambia a otro color si lo deseas al hacer hover */
+}
+
+
+.fondo-especial {
+    background-color: gray; /* Cambia este valor por el color que prefieras */
+}
+  
+
+main {
+    /* Espaciado para el contenido, si lo deseas */
+    padding: 20px; /* Espaciado opcional para el contenido principal */
+}
+
+
+.nav-link{
+    color: black;
+}
+nav{
+    height: 70px;
+    background-color: #f15a14;
+}
+.nav-link:hover{
+    color: bisque;
+}
+footer{
+    position: relative;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: rgb(20, 20, 20);
+    color: white;
+    height: 350px;
+    text-align: center;
+}
+img {
+    width: calc(100% - 40px); /* Ajusta el ancho de las imágenes */
+    height: auto;       
+    display: block;    
+    object-fit: cover; 
+    margin: 0px auto; /* Espacio de 10px arriba y abajo, centrado horizontalmente */
+}
+.carousel-inner {
+    padding: 0 40px; /* Esto ayuda a asegurar que el contenedor también tenga espacio a los lados */
+}
+.custom-textarea {
+    width: calc(100% - 40px); /* Igual al cálculo del ancho de las imágenes */
+    font-size: 16px;
+    color: bl;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 0px auto; /* Centrado como las imágenes */
+    display: block; /* Asegura que ocupe el ancho completo */
+    box-sizing: border-box; /* Incluye el padding en el cálculo del ancho */
+}
+.custom-label {
+    display: block;         /* Asegura que la etiqueta ocupe todo el ancho */
+    width: calc(100% - 40px); /* Igual que el ancho del textarea */
+    font-weight: bold;      /* Texto en negritas */
+    margin: 0px auto 10px;  /* Alineado y con un margen inferior */
+    text-align: left;       /* Alineación izquierda */
+}
+.image-container {
+    display: flex; /* Aplica Flexbox */
+    justify-content: space-between; /* Espacio entre las dos imágenes */
+    margin: 0 auto; /* Centra el contenedor */
+    gap: 5px; /* Espacio entre las tarjetas */
+} 
+.custom-card {
+    width: calc(100% - 40px); /* Asegura que ocupe todo el ancho disponible menos los márgenes */
+    margin: 0px 20px; /* Centrado horizontal */
+    display: block;
+    box-sizing: border-box;
+}
+  
+.card-img-top {
+    width: 100%; /* La imagen ocupa todo el ancho de la tarjeta */
+    height: auto;
+}
+  
+.cropped-image {
+    width: 100%; /* Ocupa todo el ancho de la tarjeta */
+    height: 355px; /* Ajusta la altura de la imagen */
+    object-fit: cover; /* Recorta la imagen si es necesario */
+    display: block;
+}
+/* CSS para las 3 nuevas imágenes */
+.new-image-container {
+    display: flex;
+    justify-content: space-between; /* Asegura que las imágenes se distribuyan equitativamente */
+    margin: 0 auto; /* Centra el contenedor */
+    padding: 0 20px; /* Deja 20px de espacio en los lados */
+    gap: 5px; /* Espacio entre las tarjetas */
+}
+
+.new-image-container .custom-card {
+    width: calc(33.33% - 10px); /* Ajusta el ancho para que se dividan equitativamente entre las 3 imágenes */
+    display: block;
+    box-sizing: border-box;
+}
+
+.new-image-container .card-img-top {
+    width: 100%; /* La imagen ocupa todo el ancho de la tarjeta */
+    height: auto;
+}
+
+.new-image-container .cropped-image {
+    height: 355px; /* Ajusta la altura de la imagen como lo hiciste con las anteriores */
+    object-fit: cover; /* Recorta la imagen si es necesario */
+    display: block;
+}
+.small-icon {
+    width: 70px;
+    height: 70px;
+}
+.custom-link {
+    color: #f7f2f2; /* Cambia este color según tus preferencias */
+    text-decoration: none; /* Elimina el subrayado */
+}
+
+.custom-link:hover {
+    color: #1b0c8e; /* Cambia el color al pasar el mouse (opcional) */
+    text-decoration: underline; /* Añade un subrayado (opcional) */
+}
