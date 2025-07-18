@@ -19,17 +19,23 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
 
 <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="logo">🧾 Oficina Virtual</div>
-        <div class="user-info">Bienvenid@: <strong><?php echo htmlspecialchars($nombreCliente); ?></strong></div>
-        <nav>
-            <ul>
-                <li><a href="#">👤 Mi perfil</a></li>
-                <li><a href="Cliente.php">📋 Servicios</a></li>
-                <li><a href="Logout.php">🚪 Salir</a></li>
-            </ul>
-        </nav>
-    </aside>
+        <aside class="sidebar">
+            <div class="logo">🧾 Oficina Virtual</div>
+            <div class="user-info">Bienvenid@: <strong><?php echo htmlspecialchars($nombreCliente); ?></strong></div>
+            <nav>
+                <ul>
+                    <li class="has-submenu">
+                        <a href="#" id="togglePerfil">👨🏼‍💻 Mi perfil</a>
+                        <ul class="submenu" id="submenuPerfil">
+                            <li><a href="edit_profile.php">✏️ Editar</a></li>
+                            <li><a href="misdocumentos.php">📄 Mis documentos</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-separator"><a href="#">📋 Servicios</a></li>
+                    <li><a href="Logout.php">🚪 Salir</a></li>
+                </ul>
+            </nav>
+        </aside>
 
     <!-- Contenido principal -->
     <main class="main-content">
@@ -76,6 +82,21 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
         </section>
     </main>
 </div>
+
+
+<script>
+    // PARA DESPLEGABLE DE MI PERFIL
+document.addEventListener("DOMContentLoaded", function() {
+    const toggle = document.getElementById("togglePerfil");
+    const item = toggle.parentElement;
+
+    toggle.addEventListener("click", function(e) {
+        e.preventDefault();
+        item.classList.toggle("open");
+    });
+});
+</script>
+
 
 </body>
 </html>
