@@ -20,8 +20,9 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
 <div class="layout">
     <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="logo">🧾 Oficina Virtual</div>
-            <div class="user-info">Bienvenid@: <strong><?php echo htmlspecialchars($nombreCliente); ?></strong></div>
+            <div class="logo">
+                <img src="https://ovi.economiaytrabajo.chiapas.gob.mx/static/LOGO.png" alt="Icono de Oficina Virtual" style="vertical-align: middle; margin-right: 5px; height: 30px;">Oficina Virtual
+            </div>
             <nav>
                 <ul>
                     <li class="has-submenu">
@@ -31,7 +32,7 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
                             <li><a href="misdocumentos.php">📄 Mis documentos</a></li>
                         </ul>
                     </li>
-                    <li class="menu-separator"><a href="#">📋 Servicios</a></li>
+                    <li class="menu-separator"><a href="Cliente.php">📋 Servicios</a></li>
                     <li><a href="Logout.php">🚪 Salir</a></li>
                 </ul>
             </nav>
@@ -40,7 +41,9 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
     <!-- Contenido principal -->
     <main class="main-content">
         <header class="top-bar">
-            Bienvenid@ <?php echo strtoupper(htmlspecialchars($nombreCliente)); ?>
+            <div style="float: right;">
+                Bienvenid@ <?php echo strtoupper(htmlspecialchars($nombreCliente)); ?>
+            </div>
         </header>
 
         <section class="content">
