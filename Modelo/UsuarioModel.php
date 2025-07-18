@@ -3,7 +3,7 @@ class Usuario {
     public static function obtenerUsuarios() {
         return [
             ['usuario' => 'admin', 'clave' => 'admin123', 'rol' => 'admin'],
-            ['usuario' => 'cliente1', 'clave' => 'cliente123', 'rol' => 'cliente']
+            ['usuario' => 'cliente1@gmail.com', 'clave' => 'cliente123', 'rol' => 'cliente']
         ];
     }
 

@@ -1,3 +1,17 @@
+<?php
+session_start();
+
+// Redirigir si ya hay sesión activa
+if (isset($_SESSION['rol'])) {
+    if ($_SESSION['rol'] === 'admin') {
+        header('Location: Administrador.php');
+    } else {
+        header('Location: Cliente.php');
+    }
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -17,18 +31,19 @@
         
         <!-- Sección del formulario -->
         <div class="form-section">
-            <h1 class="form-title">SISTEMA OVI OFICINA VIRTUAL INFORMATICA</h1>
+            <h1 class="form-title">SISTEMA OVI OFICINA VIRTUAL INFORMÁTICA</h1>
             
-            <form method="POST" action="index.php?action=iniciarSesion">
+            <!-- FORMULARIO -->
+            <form method="POST" action="../Controlador/LoginController.php">
                 <div class="form-input">
-                    <label for="correo">Usuario o Correo Electrónico</label>
-                    <input type="email" name="correo" id="correo" required>
-                    <p class="form-hint">Por favor, proporciona un nombre de usuario o un correo</p>
+                    <label for="usuario">Usuario o Correo Electrónico</label>
+                    <input type="text" name="usuario" id="usuario" required>
+                    <p class="form-hint">Por favor, proporciona tu usuario o correo electrónico</p>
                 </div>
                 
                 <div class="form-input">
-                    <label for="contraseña">Contraseña</label>
-                    <input type="password" name="contraseña" id="contraseña" required>
+                    <label for="clave">Contraseña</label>
+                    <input type="password" name="clave" id="clave" required>
                 </div>
                 
                 <div class="divider"></div>
@@ -39,6 +54,11 @@
                     <a href="#">Restablecer contraseña</a>
                 </div>
             </form>
+
+            <!-- MENSAJE DE ERROR -->
+            <?php if (isset($_GET['error'])): ?>
+                <p style="color:red; margin-top:10px;">Usuario o contraseña incorrectos</p>
+            <?php endif; ?>
             
             <div class="footer-text">
                 Sistema de Administración de Información Económica de Chiapas © 2025
@@ -48,5 +68,4 @@
 </div>
 
 </body>
-
 </html>

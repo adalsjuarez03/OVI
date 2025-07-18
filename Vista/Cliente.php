@@ -25,7 +25,7 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
         <nav>
             <ul>
                 <li><a href="#">👤 Mi perfil</a></li>
-                <li><a href="#">📋 Servicios</a></li>
+                <li><a href="Cliente.php">📋 Servicios</a></li>
                 <li><a href="Logout.php">🚪 Salir</a></li>
             </ul>
         </nav>
