@@ -1,4 +1,4 @@
 <?php
 // Redirige al login
-header("Location: Vista/login.php");
+header("Location: Vista/Login.php");
 exit();

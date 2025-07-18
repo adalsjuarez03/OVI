@@ -2,9 +2,9 @@
 session_start();
 if (isset($_SESSION['rol'])) {
     if ($_SESSION['rol'] === 'admin') {
-        header('Location: homeAdmin.php');
+        header('Location: Administrador.php');
     } else {
-        header('Location: homeCliente.php');
+        header('Location: Cliente.php');
     }
     exit();
 }
@@ -15,7 +15,7 @@ if (isset($_SESSION['rol'])) {
 <head>
     <meta charset="UTF-8">
     <title>Iniciar Sesión</title>
-    <link rel="stylesheet" href="../CSS/estilo.css">
+    <link rel="stylesheet" href="../CSS/style.css">
 </head>
 <body>
     <h2>Iniciar Sesión</h2>

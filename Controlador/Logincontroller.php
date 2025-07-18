@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../Modelo/Usuario.php';
+require_once '../Modelo/UsuarioModel.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = $_POST['usuario'];
@@ -12,12 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['rol'] = $usuarioEncontrado['rol'];
 
         if ($usuarioEncontrado['rol'] === 'admin') {
-            header('Location: ../Vista/homeAdmin.php');
+            header('Location: ../Vista/Administrador.php');
         } else {
-            header('Location: ../Vista/homeCliente.php');
+            header('Location: ../Vista/Cliente.php');
         }
     } else {
-        header('Location: ../Vista/login.php?error=1');
+        header('Location: ../Vista/Login.php?error=1');
     }
     exit();
 }
