@@ -76,3 +76,50 @@ function dropAtEnd(ev) {
     }
 }
 
+// Script para el modal de nueva solicitud
+    document.addEventListener("DOMContentLoaded", function() {
+        const modal = document.getElementById("nuevaSolicitudModal");
+        const btn = document.getElementById("nuevaSolicitudBtn");
+        const closeBtn = document.getElementById("cerrarModal");
+        const fileInput = document.getElementById("archivo");
+        const fileName = document.getElementById("fileName");
+
+        // Mostrar modal al hacer clic en el botón
+        btn.addEventListener("click", function() {
+            modal.style.display = "block";
+        });
+
+        // Cerrar modal
+        closeBtn.addEventListener("click", function() {
+            modal.style.display = "none";
+        });
+
+        // Cerrar al hacer clic fuera del modal
+        window.addEventListener("click", function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        });
+
+        // Mostrar nombre del archivo seleccionado
+        fileInput.addEventListener("change", function() {
+            if (this.files.length > 0) {
+                fileName.textContent = this.files[0].name;
+            } else {
+                fileName.textContent = "";
+            }
+        });
+
+        // Manejar el envío del formulario
+        document.getElementById("solicitudForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            
+            // Aquí puedes agregar la lógica para enviar el formulario
+            alert("Solicitud enviada con éxito!");
+            modal.style.display = "none";
+            
+            // Resetear el formulario
+            this.reset();
+            fileName.textContent = "";
+        });
+    });
