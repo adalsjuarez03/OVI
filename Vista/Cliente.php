@@ -102,15 +102,14 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
 
 <div class="drop-zone" ondragover="allowDrop(event)" ondrop="dropAtEnd(event)"></div>
 </div>
-
-
     <!-- Puedes duplicar más columnas como EN PROCESO, NUEVO, etc -->
 </div>
 
         </section>
     </main>
 </div>
-
+<!-- Script para el menú desplegable del perfil -->
 <script src="./script/script.js"></script>
+
 </body>
 </html>
