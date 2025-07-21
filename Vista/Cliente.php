@@ -14,6 +14,13 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
     <meta charset="UTF-8">
     <title>Panel Cliente</title>
       <link rel="stylesheet" href="./CSS/style.css">
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+    * {
+        font-family: 'Inter', sans-serif;
+    }
+</style>
+
 </head>
 <body>
 
@@ -55,51 +62,55 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
                 </div>
             </div>
 
-            <!-- Tabla de ejemplo -->
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Estatus</th>
-                            <th>Núm. servicio</th>
-                            <th>Descripción</th>
-                            <th>Turnado</th>
-                            <th>Fecha</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td><span class="badge green">CONCLUIDO</span></td>
-                            <td>SEyT-UI-001</td>
-                            <td>Ejemplo de solicitud de servicio.</td>
-                            <td><strong>CAROLINA</strong></td>
-                            <td>17/07/2025</td>
-                            <td><button class="btn chat">💬</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <!-- Contenedor Kanban -->
+<div class="kanban-container" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <!-- Tarjeta ejemplo en columna CONCLUIDO -->
+<div class="kanban-card" id="task-1" draggable="true" ondragstart="drag(event)" ondragover="allowDrop(event)" ondrop="drop(event)">
+    <div class="card-header">
+        <span class="badge green">CONCLUIDO</span>
+        <span class="dots" onclick="toggleMenu(this)">⋮</span>
+        <ul class="dropdown">
+            <li>👁 Ver</li>
+            <li>✏️ Editar</li>
+            <li>🗑 Eliminar</li>
+        </ul>
+    </div>
+    <h3>SEyT-UI-001</h3>
+    <p>Ejemplo de solicitud de servicio.</p>
+    <div class="kanban-footer">
+        <strong>CAROLINA</strong>
+        <button class="btn chat">💬</button>
+    </div>
+</div>
+<div class="kanban-card" id="task-2" draggable="true" ondragstart="drag(event)" ondragover="allowDrop(event)" ondrop="drop(event)">
+    <div class="card-header">
+        <span class="badge green">CONCLUIDO</span>
+        <span class="dots" onclick="toggleMenu(this)">⋮</span>
+        <ul class="dropdown">
+            <li>👁 Ver</li>
+            <li>✏️ Editar</li>
+            <li>🗑 Eliminar</li>
+        </ul>
+    </div>
+    <h3>SEyT-UI-001</h3>
+    <p>Ejemplo de solicitud de servicio.</p>
+    <div class="kanban-footer">
+        <strong>Marcos</strong>
+        <button class="btn chat">💬</button>
+    </div>
+</div>
+
+<div class="drop-zone" ondragover="allowDrop(event)" ondrop="dropAtEnd(event)"></div>
+</div>
+
+
+    <!-- Puedes duplicar más columnas como EN PROCESO, NUEVO, etc -->
+</div>
+
         </section>
     </main>
 </div>
 
-
-<script>
-    // PARA DESPLEGABLE DE MI PERFIL
-document.addEventListener("DOMContentLoaded", function() {
-    const toggle = document.getElementById("togglePerfil");
-    const item = toggle.parentElement;
-
-    toggle.addEventListener("click", function(e) {
-        e.preventDefault();
-        item.classList.toggle("open");
-    });
-});
-</script>
-
-
+<script src="./script/script.js"></script>
 </body>
 </html>
