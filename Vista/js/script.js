@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
+
 // Drag and Drop
 function allowDrop(ev) {
     ev.preventDefault();

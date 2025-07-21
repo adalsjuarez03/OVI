@@ -109,7 +109,7 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
     </main>
 </div>
 <!-- Script para el menú desplegable del perfil -->
-<script src="./script/script.js"></script>
+<script src="./js/script.js"></script>
 
 </body>
 </html>
