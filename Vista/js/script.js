@@ -123,3 +123,30 @@ function dropAtEnd(ev) {
             fileName.textContent = "";
         });
     });
+    function verDetalle() {
+  alert("Aquí se mostrará más información del servicio.");
+  // O puedes mostrar un modal con datos cargados por JavaScript
+}
+function verDetalle() {
+  // Estos valores puedes cambiarlos dinámicamente si los pasas con data-* o AJAX
+  document.getElementById("detalleTitulo").innerText = "SEyT-UI-160 - Generar sesión Zoom";
+  document.getElementById("detalleEstatus").innerText = "CONCLUIDO";
+  document.getElementById("detalleTurnado").innerText = "DIAZ TORAL CARLOS ARTURO";
+  document.getElementById("detalleFecha").innerText = "03/04/2025 12:58:22";
+  document.getElementById("detalleDescripcion").innerText = 
+    "Solicitud para generar una sesión de videoconferencia a través de las aplicación Zoom de la cual anexo memorándum No. SEyT/S'SNECH/DVIO/097/2025 de fecha 3 a abril del 2025.";
+
+  document.getElementById("detalleModal").style.display = "block";
+}
+
+function cerrarModalDetalle() {
+  document.getElementById("detalleModal").style.display = "none";
+}
+
+window.addEventListener("click", function(event) {
+  const modal = document.getElementById("detalleModal");
+  if (event.target === modal) {
+    modal.style.display = "none";
+  }
+});
+
