@@ -21,7 +21,7 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
 
 <div class="layout">
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="logo">
             <img src="https://ovi.economiaytrabajo.chiapas.gob.mx/static/LOGO.png" alt="Icono de Oficina Virtual" style="vertical-align: middle; margin-right: 5px; height: 30px;">Oficina Virtual
         </div>
@@ -42,11 +42,13 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
 
     <!-- Contenido principal -->
     <main class="main-content">
-        <header class="top-bar">
-            <div style="float: right;">
-                Bienvenid@ <?php echo strtoupper(htmlspecialchars($nombreCliente)); ?>
-            </div>
-        </header>
+    <header class="top-bar">
+        <button id="toggleSidebar" class="menu-toggle">☰</button>
+        <div style="float: right;">
+            Bienvenid@ <?php echo strtoupper(htmlspecialchars($nombreCliente)); ?>
+        </div>
+    </header>
+
 
         <section class="content">
             <div class="section-header">
@@ -61,10 +63,10 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
  <div class="kanban-container" ondrop="drop(event)" ondragover="allowDrop(event)">
   
   <!-- Tarjeta 1 -->
-  <div class="kanban-card pendiente" id="task-1" draggable="true" ondragstart="drag(event)">
+  <div class="kanban-card cancelado" id="task-1" draggable="true" ondragstart="drag(event)">
     <div class="card-header">
       <div class="left">
-        <span class="badge green">CONCLUIDO</span>
+        <span class="badge cancelado">CANCELADO</span>
         <small class="created">📅 03/04/2025</small>
       </div>
       <span class="dots" onclick="toggleMenu(this)">⋮</span>
@@ -90,10 +92,10 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
   </div>
 
   <!-- Tarjeta 2 -->
-  <div class="kanban-card proceso" id="task-2" draggable="true" ondragstart="drag(event)">
+  <div class="kanban-card asignado" id="task-2" draggable="true" ondragstart="drag(event)">
     <div class="card-header">
       <div class="left">
-        <span class="badge green">CONCLUIDO</span>
+        <span class="badge asignado">ASIGNADO</span>
         <small class="created">📅 07/04/2025</small>
       </div>
       <span class="dots" onclick="toggleMenu(this)">⋮</span>
@@ -122,7 +124,7 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
   <div class="kanban-card concluido" id="task-3" draggable="true" ondragstart="drag(event)">
     <div class="card-header">
       <div class="left">
-        <span class="badge green">CONCLUIDO</span>
+        <span class="badge concluido">CONCLUIDO</span>
         <small class="created">📅 03/04/2025</small>
       </div>
       <span class="dots" onclick="toggleMenu(this)">⋮</span>

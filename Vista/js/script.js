@@ -149,4 +149,8 @@ window.addEventListener("click", function(event) {
     modal.style.display = "none";
   }
 });
+// Alternar clase "collapsed" en sidebar
+document.getElementById('toggleSidebar').addEventListener('click', function () {
+    document.getElementById('sidebar').classList.toggle('collapsed');
+});
 
