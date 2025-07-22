@@ -11,61 +11,7 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') {
 <head>
     <meta charset="UTF-8">
     <title>Panel Administrador</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background-color: #343a40;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .container {
-            padding: 40px;
-        }
-
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.2s ease-in-out;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card h3 {
-            margin-bottom: 10px;
-        }
-
-        a.logout {
-            display: block;
-            margin-top: 20px;
-            text-align: center;
-            color: #dc3545;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        a.logout:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="./CSS/diseno.css">
 </head>
 <body>
 
@@ -78,7 +24,7 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') {
         <div class="card">
             <h3>Gestión de Usuarios</h3>
             <p>Ver, agregar o eliminar usuarios del sistema.</p>
-            <a href="#">Ir a Usuarios</a>
+            <a href="../admin/usuarios.php">Ir a Usuarios</a>
         </div>
 
         <div class="card">
