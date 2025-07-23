@@ -5,7 +5,7 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') {
     exit();
 }
 
-$nombreAdministrador = isset($_SESSION['administrador']) ? $_SESSION['administrador'] : 'Administrador';
+$nombreAdministrador = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESSION['apellido'] : 'Usuario';
 ?>
 
 <!DOCTYPE html>
@@ -35,7 +35,8 @@ $nombreAdministrador = isset($_SESSION['administrador']) ? $_SESSION['administra
                     </ul>
                 </li>
                 <li class="menu-separator"><a href="Cliente.php">📋 Servicios</a></li>
-                <li><a href="Logout.php">🚪 Salir</a></li>
+                <li class="menu-separator"><a href="usuarios.php">👥 Gestión de Usuarios</a></li>
+                <li class="menu-separator"><a href="Logout.php">🚪 Salir</a></li>
             </ul>
         </nav>
     </aside>
@@ -201,7 +202,7 @@ $nombreAdministrador = isset($_SESSION['administrador']) ? $_SESSION['administra
 </div>
 
 <!-- Script para el menú desplegable del perfil -->
-<script src="./js/admin.js"></script>
+<script src="./js/script.js"></script>
 
 
 </body>

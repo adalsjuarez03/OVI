@@ -5,7 +5,7 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'cliente') {
     exit();
 }
 
-$nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
+$nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESSION['apellido'] : 'Usuario';
 ?>
 
 <!DOCTYPE html>
