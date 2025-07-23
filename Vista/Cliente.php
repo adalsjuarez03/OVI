@@ -13,14 +13,13 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
 <head>
     <meta charset="UTF-8">
     <title>Panel Cliente</title>
-    <link rel="stylesheet" href="./CSS/style.css">
+    <link rel="stylesheet" href="./CSS/cliente.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
+    
 </head>
 <body>
 
 <div class="layout">
-    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="logo">
             <img src="https://ovi.economiaytrabajo.chiapas.gob.mx/static/LOGO.png" alt="Icono de Oficina Virtual" style="vertical-align: middle; margin-right: 5px; height: 30px;">Oficina Virtual
@@ -40,15 +39,13 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
         </nav>
     </aside>
 
-    <!-- Contenido principal -->
     <main class="main-content">
-    <header class="top-bar">
-        <button id="toggleSidebar" class="menu-toggle">☰</button>
-        <div style="float: right;">
-            Bienvenid@ <?php echo strtoupper(htmlspecialchars($nombreCliente)); ?>
-        </div>
-    </header>
-
+        <header class="top-bar">
+            <button id="toggleSidebar" class="menu-toggle">☰</button>
+            <div style="float: right;">
+                Bienvenid@ <?php echo strtoupper(htmlspecialchars($nombreCliente)); ?>
+            </div>
+        </header>
 
         <section class="content">
             <div class="section-header">
@@ -59,104 +56,100 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
                 </div>
             </div>
 
-            <!-- Contenedor Kanban -->
- <div class="kanban-container" ondrop="drop(event)" ondragover="allowDrop(event)">
-  
-  <!-- Tarjeta 1 -->
-  <div class="kanban-card cancelado" id="task-1" draggable="true" ondragstart="drag(event)">
-    <div class="card-header">
-      <div class="left">
-        <span class="badge cancelado">CANCELADO</span>
-        <small class="created">📅 03/04/2025</small>
-      </div>
-      <span class="dots" onclick="toggleMenu(this)">⋮</span>
-      <ul class="dropdown">
-        <li onclick="verDetalle()">👁 Ver</li>
-        <li>✏️ Editar</li>
-        <li>🗑 Eliminar</li>
-      </ul>
-    </div>
+            <div class="kanban-container">
+                <div class="kanban-column" id="no-asignado-col">
+                    <h3>🕓 No asignado</h3>
+                    <div class="kanban-list"></div>
+                </div>
+                <div class="kanban-column" id="asignado-col">
+                    <h3>🛠 Asignado</h3>
+                    <div class="kanban-list"></div>
+                </div>
+                <div class="kanban-column" id="concluido-col">
+                    <h3>✅ Concluido / ❌ Cancelado</h3>
+                    <div class="kanban-list"></div>
+                </div>
+            </div>
 
-    <div class="card-body">
-      <div class="tags">
-        <span class="tag">#SEyT-UI-160</span>
-      </div>
-      <h4 class="titulo-servicio">Generar sesión Zoom</h4>
-      <p class="descripcion">Solicitud para generar una sesión de videoconferencia a través de la aplicación Zoom de la cual anexo memorándum...</p>
-    </div>
+            <!-- Tarjetas (se asignan por JS) -->
+            <div id="tarjetasOcultas" style="display: none;">
+                <div class="kanban-card" data-status="cancelado">
+                    <div class="card-header">
+                        <div class="left">
+                            <span class="badge cancelado">CANCELADO</span>
+                            <small class="created">📅 03/04/2025</small>
+                        </div>
+                        <span class="dots" onclick="toggleMenu(this)">⋮</span>
+                        <ul class="dropdown">
+                            <li onclick="verDetalle()">👁 Ver</li>
+                            <li>✏️ Editar</li>
+                            <li>❌ Cancelar</li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tags"><span class="tag">#SEyT-UI-160</span></div>
+                        <h4 class="titulo-servicio">Generar sesión Zoom</h4>
+                        <p class="descripcion">Solicitud para generar una sesión de videoconferencia...</p>
+                    </div>
+                    <div class="kanban-footer">
+                        <div class="asignado">DIAZ TORAL CARLOS ARTURO</div>
+                        <button class="btn chat">💬</button>
+                    </div>
+                </div>
 
-    <div class="kanban-footer">
-      <div class="asignado">DIAZ TORAL CARLOS ARTURO</div>
-      <button class="btn chat">💬</button>
-    </div>
-  </div>
+                <div class="kanban-card" data-status="asignado">
+                    <div class="card-header">
+                        <div class="left">
+                            <span class="badge asignado">ASIGNADO</span>
+                            <small class="created">📅 07/04/2025</small>
+                        </div>
+                        <span class="dots" onclick="toggleMenu(this)">⋮</span>
+                        <ul class="dropdown">
+                            <li onclick="verDetalle()">👁 Ver</li>
+                            <li>✏️ Editar</li>
+                            <li>❌ Cancelar</li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tags"><span class="tag">#SEyT-UI-189</span></div>
+                        <h4 class="titulo-servicio">Solicitud revisión técnica</h4>
+                        <p class="descripcion">Programación de visita técnica por interrupciones en internet...</p>
+                    </div>
+                    <div class="kanban-footer">
+                        <div class="asignado">NIGENDA BLANCO JOSE ALEJANDRO</div>
+                        <button class="btn chat">💬</button>
+                    </div>
+                </div>
 
-  <!-- Tarjeta 2 -->
-  <div class="kanban-card asignado" id="task-2" draggable="true" ondragstart="drag(event)">
-    <div class="card-header">
-      <div class="left">
-        <span class="badge asignado">ASIGNADO</span>
-        <small class="created">📅 07/04/2025</small>
-      </div>
-      <span class="dots" onclick="toggleMenu(this)">⋮</span>
-      <ul class="dropdown">
-        <li onclick="verDetalle()">👁 Ver</li>
-        <li>✏️ Editar</li>
-        <li>🗑 Eliminar</li>
-      </ul>
-    </div>
-
-    <div class="card-body">
-      <div class="tags">
-        <span class="tag">#SEyT-UI-189</span>
-      </div>
-      <h4 class="titulo-servicio">Solicitud revisión técnica</h4>
-      <p class="descripcion">Solicitamos la programación de una visita técnica a nuestras instalaciones. Se detectaron interrupciones en el servicio de internet...</p>
-    </div>
-
-    <div class="kanban-footer">
-      <div class="asignado">NIGENDA BLANCO JOSE ALEJANDRO</div>
-      <button class="btn chat">💬</button>
-    </div>
-  </div>
-
-  <!-- Tarjeta 3 -->
-  <div class="kanban-card concluido" id="task-3" draggable="true" ondragstart="drag(event)">
-    <div class="card-header">
-      <div class="left">
-        <span class="badge concluido">CONCLUIDO</span>
-        <small class="created">📅 03/04/2025</small>
-      </div>
-      <span class="dots" onclick="toggleMenu(this)">⋮</span>
-      <ul class="dropdown">
-        <li onclick="verDetalle()">👁 Ver</li>
-        <li>✏️ Editar</li>
-        <li>🗑 Eliminar</li>
-      </ul>
-    </div>
-
-    <div class="card-body">
-      <div class="tags">
-        <span class="tag">#SEyT-UI-001</span>
-      </div>
-      <h4 class="titulo-servicio">Nuevo diseño de panel</h4>
-      <p class="descripcion">Lorem ipsum dolor sit amet consectetur elit. Nulla soluta...</p>
-    </div>
-
-    <div class="kanban-footer">
-      <div class="asignado">CARLOS</div>
-      <button class="btn chat">💬</button>
-    </div>
-  </div>
-
-  <div class="drop-zone" ondragover="allowDrop(event)" ondrop="dropAtEnd(event)"></div>
-</div>
-
+                <div class="kanban-card" data-status="concluido">
+                    <div class="card-header">
+                        <div class="left">
+                            <span class="badge concluido">CONCLUIDO</span>
+                            <small class="created">📅 03/04/2025</small>
+                        </div>
+                        <span class="dots" onclick="toggleMenu(this)">⋮</span>
+                        <ul class="dropdown">
+                            <li onclick="verDetalle()">👁 Ver</li>
+                            <li>✏️ Editar</li>
+                            <li>❌ Cancelar</li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tags"><span class="tag">#SEyT-UI-001</span></div>
+                        <h4 class="titulo-servicio">Nuevo diseño de panel</h4>
+                        <p class="descripcion">Lorem ipsum dolor sit amet consectetur elit...</p>
+                    </div>
+                    <div class="kanban-footer">
+                        <div class="asignado">CARLOS</div>
+                        <button class="btn chat">💬</button>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
 </div>
 
-<!-- Modal para nueva solicitud -->
+<!-- Modal Nueva Solicitud -->
 <div id="nuevaSolicitudModal" class="modal">
     <div class="modal-content">
         <form id="solicitudForm" enctype="multipart/form-data">
@@ -167,19 +160,19 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
                 </div>
                 <img src="https://ovi.economiaytrabajo.chiapas.gob.mx/static/LOGO.png" alt="Logo">
             </div>
-            
+
             <div class="form-group">
                 <label for="descripcion">Descripción de servicio solicitado</label>
                 <p>Por favor, de una descripción de su problema</p>
                 <textarea id="descripcion" name="descripcion" required></textarea>
             </div>
-            
+
             <div class="file-upload">
                 <input type="file" id="archivo" name="archivo">
                 <label for="archivo">Pulse aquí para subir un archivo</label>
                 <span id="fileName" class="file-name"></span>
             </div>
-            
+
             <div class="modal-footer">
                 <button type="button" class="close-btn" id="cerrarModal">Cerrar</button>
                 <button type="submit" class="submit-btn">Enviar</button>
@@ -187,22 +180,21 @@ $nombreCliente = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'Cliente';
         </form>
     </div>
 </div>
-<!-- Modal de detalle del servicio -->
+
+<!-- Modal de detalle -->
 <div id="detalleModal" class="modal">
-  <div class="modal-content">
-    <span class="close-btn" onclick="cerrarModalDetalle()">×</span>
-    <h3 id="detalleTitulo"></h3>
-    <p><strong>Estatus:</strong> <span id="detalleEstatus"></span></p>
-    <p><strong>Turnado a:</strong> <span id="detalleTurnado"></span></p>
-    <p><strong>Fecha de solicitud:</strong> <span id="detalleFecha"></span></p>
-    <p><strong>Descripción completa:</strong></p>
-    <p id="detalleDescripcion" style="white-space: pre-wrap;"></p>
-  </div>
+    <div class="modal-content">
+        <span class="close-btn" onclick="cerrarModalDetalle()">×</span>
+        <h3 id="detalleTitulo"></h3>
+        <p><strong>Estatus:</strong> <span id="detalleEstatus"></span></p>
+        <p><strong>Turnado a:</strong> <span id="detalleTurnado"></span></p>
+        <p><strong>Fecha de solicitud:</strong> <span id="detalleFecha"></span></p>
+        <p><strong>Descripción completa:</strong></p>
+        <p id="detalleDescripcion" style="white-space: pre-wrap;"></p>
+    </div>
 </div>
 
-<!-- Script para el menú desplegable del perfil -->
-<script src="./js/script.js"></script>
-
+<script src="./js/cliente.js"></script>
 
 </body>
 </html>
