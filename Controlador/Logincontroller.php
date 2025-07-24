@@ -10,7 +10,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuarioEncontrado = Usuario::validar($usuario, $clave);
 
     if ($usuarioEncontrado) {
-        $_SESSION['usuario'] = $usuarioEncontrado['correo']; // o puedes eliminar esta línea si no la necesitas
+        $_SESSION['usuario'] = $usuarioEncontrado['id_usuario']; 
+
+        // guardar otros datos visibles
         $_SESSION['nombre'] = $usuarioEncontrado['nombre'];
         $_SESSION['apellido'] = $usuarioEncontrado['apellido'];
         $_SESSION['rol'] = $usuarioEncontrado['rol'];
