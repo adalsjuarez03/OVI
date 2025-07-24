@@ -14,8 +14,12 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
     <meta charset="UTF-8">
     <title>Panel Cliente</title>
     <link rel="stylesheet" href="./CSS/cliente.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body, button, input, textarea, select {
+            font-family: 'Montserrat', sans-serif;
+        }
+    </style>
 </head>
 <body>
 
