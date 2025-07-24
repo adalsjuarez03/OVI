@@ -16,9 +16,10 @@ class Usuario {
         $usuarioBD = $resultado->fetch_assoc();
 
         // Verificar la contraseña encriptada
-        if (password_verify($clave, $usuarioBD['contrasena'])) {
-            return $usuarioBD;
-        }
+       if ($clave === $usuarioBD['contrasena']) {
+    return $usuarioBD;
+}
+
     }
 
     return null;

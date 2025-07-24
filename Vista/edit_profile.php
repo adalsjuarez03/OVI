@@ -9,7 +9,7 @@ require_once '../Modelo\Conexion.php';
 $conexion = Conexion::conectar();
 
 // Obtener datos actuales del usuario
-$usuario_id = $_SESSION['id_usuario'];
+$usuario_id = $_SESSION['usuario'];
 $stmt = $conexion->prepare("SELECT * FROM usuarios WHERE id_usuario= ?");
 $stmt->bind_param("i", $usuario_id);
 $stmt->execute();
