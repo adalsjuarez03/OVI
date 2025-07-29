@@ -77,7 +77,7 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                             $result = $conn->query("SELECT * FROM Servicios WHERE Estatus = 'concluido' OR Estatus = 'cancelado' ORDER BY Fecha_solicitud DESC");
                             while ($row = $result->fetch_assoc()) {
                                 $badgeClass = strtolower($row['Estatus']);
-                                echo '<div class="kanban-card" data-status="' . $badgeClass . '">';
+                                echo '<div class="kanban-card" data-status="' . $badgeClass . '" data-id="' . $row['Id_servicio'] . '">';
                                 echo '<div class="card-header">';
                                 echo '<div class="left">';
                                 echo '<span class="badge ' . $badgeClass . '">' . strtoupper($row['Estatus']) . '</span>';
@@ -85,7 +85,7 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '</div>';
                                 echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
                                 echo '<ul class="dropdown">';
-                                echo '<li onclick="verDetalle()">👁 Ver</li>';
+                                echo '<li onclick="verDetalle(this)">👁 Ver</li>';
                                 echo '<li>✏️ Editar</li>';
                                 echo '<li>❌ Cancelar</li>';
                                 echo '</ul>';
@@ -109,7 +109,7 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                             <?php
                             $result = $conn->query("SELECT * FROM Servicios WHERE Estatus = 'asignado' ORDER BY Fecha_solicitud DESC");
                             while ($row = $result->fetch_assoc()) {
-                                echo '<div class="kanban-card" data-status="asignado">';
+                                echo '<div class="kanban-card" data-status="asignado" data-id="' . $row['Id_servicio'] . '">';
                                 echo '<div class="card-header">';
                                 echo '<div class="left">';
                                 echo '<span class="badge asignado">ASIGNADO</span>';
@@ -117,7 +117,7 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '</div>';
                                 echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
                                 echo '<ul class="dropdown">';
-                                echo '<li onclick="verDetalle()">👁 Ver</li>';
+                                echo '<li onclick="verDetalle(this)">👁 Ver</li>';
                                 echo '<li>✏️ Editar</li>';
                                 echo '<li>❌ Cancelar</li>';
                                 echo '</ul>';
@@ -141,7 +141,7 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                             <?php
                             $result = $conn->query("SELECT * FROM Servicios WHERE Estatus = 'no-asignado' ORDER BY Fecha_solicitud DESC");
                             while ($row = $result->fetch_assoc()) {
-                                echo '<div class="kanban-card" data-status="no-asignado">';
+                                echo '<div class="kanban-card" data-status="no-asignado" data-id="' . $row['Id_servicio'] . '">';
                                 echo '<div class="card-header">';
                                 echo '<div class="left">';
                                 echo '<span class="badge no-asignado">NO ASIGNADO</span>';
@@ -149,7 +149,7 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '</div>';
                                 echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
                                 echo '<ul class="dropdown">';
-                                echo '<li onclick="verDetalle()">👁 Ver</li>';
+                                echo '<li onclick="verDetalle(this)">👁 Ver</li>';
                                 echo '<li>✏️ Editar</li>';
                                 echo '<li>❌ Cancelar</li>';
                                 echo '</ul>';

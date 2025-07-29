@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// Mostrar menú de 3 puntos
 function toggleMenu(element) {
     const menu = element.nextElementSibling;
     menu.style.display = (menu.style.display === "block") ? "none" : "block";
@@ -85,15 +86,36 @@ function toggleMenu(element) {
     });
 }
 
-function verDetalle() {
-    document.getElementById("detalleTitulo").innerText = "SEyT-UI-160 - Generar sesión Zoom";
-    document.getElementById("detalleEstatus").innerText = "CANCELADO";
-    document.getElementById("detalleTurnado").innerText = "DIAZ TORAL CARLOS ARTURO";
-    document.getElementById("detalleFecha").innerText = "03/04/2025";
-    document.getElementById("detalleDescripcion").innerText = "Solicitud para generar una sesión de videoconferencia a través de la aplicación Zoom...";
-    document.getElementById("detalleModal").style.display = "block";
+// VER DETALLE desde BD
+function verDetalle(elemento) {
+    const card = elemento.closest('.kanban-card');
+    const idServicio = card.getAttribute('data-id');
+
+    fetch('./AJAX/getservicio.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'id=' + encodeURIComponent(idServicio)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert('Error: ' + data.error);
+            return;
+        }
+
+        document.getElementById('detalleTitulo').textContent = 'Servicio #' + idServicio;
+        document.getElementById('detalleEstatus').textContent = data.estatus;
+        document.getElementById('detalleTurnado').textContent = data.turnado;
+        document.getElementById('detalleFecha').textContent = data.fecha;
+        document.getElementById('detalleDescripcion').textContent = data.descripcion;
+
+        document.getElementById('detalleModal').style.display = 'block';
+    });
 }
 
+// Cerrar modal detalle
 function cerrarModalDetalle() {
-    document.getElementById("detalleModal").style.display = "none";
+    document.getElementById('detalleModal').style.display = 'none';
 }
