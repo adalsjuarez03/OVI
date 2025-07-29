@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function () {
     // Mover tarjetas a sus columnas según data-status
     const cards = document.querySelectorAll(".kanban-card");
@@ -14,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Mostrar/ocultar menú de tres puntos
-    document.addEventListener("click", function(e) {
+    document.addEventListener("click", function (e) {
         if (!e.target.matches(".dots")) {
             document.querySelectorAll(".dropdown").forEach(el => el.style.display = "none");
         }
@@ -26,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const toggle = document.getElementById("togglePerfil");
     const item = toggle.parentElement;
-    toggle.addEventListener("click", function(e) {
+    toggle.addEventListener("click", function (e) {
         e.preventDefault();
         item.classList.toggle("open");
     });
@@ -36,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("nuevaSolicitudBtn").addEventListener("click", () => modal.style.display = "block");
     document.getElementById("cerrarModal").addEventListener("click", () => modal.style.display = "none");
 
-    window.addEventListener("click", function(event) {
+    window.addEventListener("click", function (event) {
         if (event.target == modal) {
             modal.style.display = "none";
         }
@@ -48,9 +47,30 @@ document.addEventListener("DOMContentLoaded", function () {
         fileName.textContent = this.files.length > 0 ? this.files[0].name : "";
     });
 
+    // Enviar solicitud con AJAX (fetch)
     document.getElementById("solicitudForm").addEventListener("submit", function (e) {
         e.preventDefault();
-        alert("Solicitud enviada con éxito!");
+
+        const formData = new FormData(this);
+
+        fetch("registrar_archivo.php", {
+            method: "POST",
+            body: formData,
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Solicitud enviada con éxito!");
+                    location.reload(); // Recargar para mostrar el nuevo servicio
+                } else {
+                    alert("Error al registrar: " + (data.error || "Error desconocido"));
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Ocurrió un error al enviar la solicitud.");
+            });
+
         modal.style.display = "none";
         this.reset();
         fileName.textContent = "";

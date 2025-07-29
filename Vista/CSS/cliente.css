@@ -733,3 +733,75 @@ body {
   text-align: center;
   margin: 20px 0;
 }
+/*estilo para el apartado ver*/
+/* Modal elegante */
+#detalleModal .modal-content {
+    max-width: 500px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+#detalleModal .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.3s;
+}
+#detalleModal .close-btn:hover {
+    color: #000;
+}
+
+#detalleModal h3 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+#detalleModal p {
+    font-size: 15px;
+    color: #555;
+    margin: 8px 0;
+}
+
+#detalleModal strong {
+    color: #222;
+}
+
+/* Badge de estado */
+#detalleEstatus {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    text-transform: uppercase;
+}
+#detalleEstatus.cancelado {
+    background-color: #ff4d4f;
+}
+#detalleEstatus.concluido {
+    background-color: #52c41a;
+}
+#detalleEstatus.asignado {
+    background-color: #1890ff;
+}
+#detalleEstatus.no-asignado {
+    background-color: #d9d9d9;
+    color: #000;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}

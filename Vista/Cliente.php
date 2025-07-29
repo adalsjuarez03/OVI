@@ -5,6 +5,9 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'cliente') {
     exit();
 }
 
+require_once '../Modelo/Conexion.php';
+$conn = Conexion::conectar();
+
 $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESSION['apellido'] : 'Usuario';
 ?>
 
@@ -69,89 +72,99 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                 <div class="kanban-container">
                     <div class="kanban-column" id="concluido-col">
                         <h3>✅ Concluido / ❌ Cancelado</h3>
-                        <div class="kanban-list"></div>
+                        <div class="kanban-list">
+                            <?php
+                            $result = $conn->query("SELECT * FROM Servicios WHERE Estatus = 'concluido' OR Estatus = 'cancelado' ORDER BY Fecha_solicitud DESC");
+                            while ($row = $result->fetch_assoc()) {
+                                $badgeClass = strtolower($row['Estatus']);
+                                echo '<div class="kanban-card" data-status="' . $badgeClass . '">';
+                                echo '<div class="card-header">';
+                                echo '<div class="left">';
+                                echo '<span class="badge ' . $badgeClass . '">' . strtoupper($row['Estatus']) . '</span>';
+                                echo '<small class="created">📅 ' . date('d/m/Y', strtotime($row['Fecha_solicitud'])) . '</small>';
+                                echo '</div>';
+                                echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
+                                echo '<ul class="dropdown">';
+                                echo '<li onclick="verDetalle()">👁 Ver</li>';
+                                echo '<li>✏️ Editar</li>';
+                                echo '<li>❌ Cancelar</li>';
+                                echo '</ul>';
+                                echo '</div>';
+                                echo '<div class="card-body">';
+                                echo '<div class="tags"><span class="tag">#' . htmlspecialchars($row['Numero_servicio']) . '</span></div>';
+                                echo '<h4 class="titulo-servicio">' . substr(htmlspecialchars($row['Descripcion']), 0, 30) . '...</h4>';
+                                echo '<p class="descripcion">' . substr(htmlspecialchars($row['Descripcion']), 0, 60) . '...</p>';
+                                echo '</div>';
+                                echo '<div class="kanban-footer">';
+                                echo '<div class="asignado">' . htmlspecialchars($row['Turnado']) . '</div>';
+                                echo '<button class="btn chat">💬</button>';
+                                echo '</div></div>';
+                            }
+                            ?>
+                        </div>
                     </div>
                     <div class="kanban-column" id="asignado-col">
                         <h3>🛠 Asignado</h3>
-                        <div class="kanban-list"></div>
+                        <div class="kanban-list">
+                            <?php
+                            $result = $conn->query("SELECT * FROM Servicios WHERE Estatus = 'asignado' ORDER BY Fecha_solicitud DESC");
+                            while ($row = $result->fetch_assoc()) {
+                                echo '<div class="kanban-card" data-status="asignado">';
+                                echo '<div class="card-header">';
+                                echo '<div class="left">';
+                                echo '<span class="badge asignado">ASIGNADO</span>';
+                                echo '<small class="created">📅 ' . date('d/m/Y', strtotime($row['Fecha_solicitud'])) . '</small>';
+                                echo '</div>';
+                                echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
+                                echo '<ul class="dropdown">';
+                                echo '<li onclick="verDetalle()">👁 Ver</li>';
+                                echo '<li>✏️ Editar</li>';
+                                echo '<li>❌ Cancelar</li>';
+                                echo '</ul>';
+                                echo '</div>';
+                                echo '<div class="card-body">';
+                                echo '<div class="tags"><span class="tag">#' . htmlspecialchars($row['Numero_servicio']) . '</span></div>';
+                                echo '<h4 class="titulo-servicio">' . substr(htmlspecialchars($row['Descripcion']), 0, 30) . '...</h4>';
+                                echo '<p class="descripcion">' . substr(htmlspecialchars($row['Descripcion']), 0, 60) . '...</p>';
+                                echo '</div>';
+                                echo '<div class="kanban-footer">';
+                                echo '<div class="asignado">' . htmlspecialchars($row['Turnado']) . '</div>';
+                                echo '<button class="btn chat">💬</button>';
+                                echo '</div></div>';
+                            }
+                            ?>
+                        </div>
                     </div>
                     <div class="kanban-column" id="no-asignado-col">
                         <h3>🕓 No asignado</h3>
-                        <div class="kanban-list"></div>
-                    </div>
-                </div>
-
-                <!-- Tarjetas (se asignan por JS) -->
-                <div id="tarjetasOcultas" style="display: none;">
-                    <div class="kanban-card" data-status="cancelado">
-                        <div class="card-header">
-                            <div class="left">
-                                <span class="badge cancelado">CANCELADO</span>
-                                <small class="created">📅 03/04/2025</small>
-                            </div>
-                            <span class="dots" onclick="toggleMenu(this)">⋮</span>
-                            <ul class="dropdown">
-                                <li onclick="verDetalle()">👁 Ver</li>
-                                <li>✏️ Editar</li>
-                                <li>❌ Cancelar</li>
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <div class="tags"><span class="tag">#SEyT-UI-160</span></div>
-                            <h4 class="titulo-servicio">Generar sesión Zoom</h4>
-                            <p class="descripcion">Solicitud para generar una sesión de videoconferencia...</p>
-                        </div>
-                        <div class="kanban-footer">
-                            <div class="asignado">DIAZ TORAL CARLOS ARTURO</div>
-                            <button class="btn chat">💬</button>
-                        </div>
-                    </div>
-
-                    <div class="kanban-card" data-status="asignado">
-                        <div class="card-header">
-                            <div class="left">
-                                <span class="badge asignado">ASIGNADO</span>
-                                <small class="created">📅 07/04/2025</small>
-                            </div>
-                            <span class="dots" onclick="toggleMenu(this)">⋮</span>
-                            <ul class="dropdown">
-                                <li onclick="verDetalle()">👁 Ver</li>
-                                <li>✏️ Editar</li>
-                                <li>❌ Cancelar</li>
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <div class="tags"><span class="tag">#SEyT-UI-189</span></div>
-                            <h4 class="titulo-servicio">Solicitud revisión técnica</h4>
-                            <p class="descripcion">Programación de visita técnica por interrupciones en internet...</p>
-                        </div>
-                        <div class="kanban-footer">
-                            <div class="asignado">NIGENDA BLANCO JOSE ALEJANDRO</div>
-                            <button class="btn chat">💬</button>
-                        </div>
-                    </div>
-
-                    <div class="kanban-card" data-status="concluido">
-                        <div class="card-header">
-                            <div class="left">
-                                <span class="badge concluido">CONCLUIDO</span>
-                                <small class="created">📅 03/04/2025</small>
-                            </div>
-                            <span class="dots" onclick="toggleMenu(this)">⋮</span>
-                            <ul class="dropdown">
-                                <li onclick="verDetalle()">👁 Ver</li>
-                                <li>✏️ Editar</li>
-                                <li>❌ Cancelar</li>
-                            </ul>
-                        </div>
-                        <div class="card-body">
-                            <div class="tags"><span class="tag">#SEyT-UI-001</span></div>
-                            <h4 class="titulo-servicio">Nuevo diseño de panel</h4>
-                            <p class="descripcion">Lorem ipsum dolor sit amet consectetur elit...</p>
-                        </div>
-                        <div class="kanban-footer">
-                            <div class="asignado">CARLOS</div>
-                            <button class="btn chat">💬</button>
+                        <div class="kanban-list">
+                            <?php
+                            $result = $conn->query("SELECT * FROM Servicios WHERE Estatus = 'no-asignado' ORDER BY Fecha_solicitud DESC");
+                            while ($row = $result->fetch_assoc()) {
+                                echo '<div class="kanban-card" data-status="no-asignado">';
+                                echo '<div class="card-header">';
+                                echo '<div class="left">';
+                                echo '<span class="badge no-asignado">NO ASIGNADO</span>';
+                                echo '<small class="created">📅 ' . date('d/m/Y', strtotime($row['Fecha_solicitud'])) . '</small>';
+                                echo '</div>';
+                                echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
+                                echo '<ul class="dropdown">';
+                                echo '<li onclick="verDetalle()">👁 Ver</li>';
+                                echo '<li>✏️ Editar</li>';
+                                echo '<li>❌ Cancelar</li>';
+                                echo '</ul>';
+                                echo '</div>';
+                                echo '<div class="card-body">';
+                                echo '<div class="tags"><span class="tag">#' . htmlspecialchars($row['Numero_servicio']) . '</span></div>';
+                                echo '<h4 class="titulo-servicio">' . substr(htmlspecialchars($row['Descripcion']), 0, 30) . '...</h4>';
+                                echo '<p class="descripcion">' . substr(htmlspecialchars($row['Descripcion']), 0, 60) . '...</p>';
+                                echo '</div>';
+                                echo '<div class="kanban-footer">';
+                                echo '<div class="asignado">' . htmlspecialchars($row['Turnado']) . '</div>';
+                                echo '<button class="btn chat">💬</button>';
+                                echo '</div></div>';
+                            }
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -205,7 +218,5 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
     </div>
 
     <script src="./js/cliente.js"></script>
-
 </body>
-
 </html>
