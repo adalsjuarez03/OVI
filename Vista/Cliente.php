@@ -65,7 +65,15 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                     <h2>Servicios solicitados <?php echo strtoupper(htmlspecialchars($nombreCliente)); ?></h2>
                     <div class="actions">
                         <button class="btn new" id="nuevaSolicitudBtn">+ Nueva solicitud</button>
-                        <button class="btn filter">Filtros</button>
+                        <div class="dropdown-filtro">
+                            <button class="btn filter" onclick="toggleFiltroMenu()">🎯 Filtros</button>
+                            <ul class="filtro-menu" id="filtroMenu">
+                                <li onclick="filtrarColumna('concluido')">✅ Concluido / ❌ Cancelado</li>
+                                <li onclick="filtrarColumna('asignado')">🛠 Asignado</li>
+                                <li onclick="filtrarColumna('no-asignado')">🕓 No asignado</li>
+                                <li onclick="filtrarColumna('todas')">🔄 Mostrar todas</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
@@ -218,5 +226,34 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
     </div>
 
     <script src="./js/cliente.js"></script>
+
+    <script>
+        function toggleFiltroMenu() {
+            const menu = document.getElementById("filtroMenu");
+            menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
+        }
+
+        // Ocultar al hacer clic fuera del menú
+        window.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown-filtro')) {
+                document.getElementById("filtroMenu").style.display = "none";
+            }
+        });
+
+        function filtrarColumna(tipo) {
+            const columnas = {
+                'concluido': document.getElementById('concluido-col'),
+                'asignado': document.getElementById('asignado-col'),
+                'no-asignado': document.getElementById('no-asignado-col'),
+            };
+
+            for (let key in columnas) {
+                columnas[key].style.display = (tipo === 'todas' || tipo === key) ? 'block' : 'none';
+            }
+
+            document.getElementById("filtroMenu").style.display = "none";
+        }
+    </script>
 </body>
+
 </html>

@@ -799,6 +799,73 @@ body {
     background-color: #d9d9d9;
     color: #000;
 }
+/*---------------------------------------------*/
+/* PARA BOTON DE FILTROS */
+
+.btn.filter {
+    background-color: #16b22d;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.btn.filter:hover {
+    background-color: #0066cc;
+}
+
+/* Contenedor del dropdown */
+.dropdown-filtro {
+    position: relative;
+    display: inline-block;
+}
+
+/* Estilo del menú desplegable */
+.filtro-menu {
+    display: none;
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    min-width: 240px;
+    overflow: hidden;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.filtro-menu li {
+    padding: 12px 18px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background-color 0.2s, padding-left 0.2s;
+}
+
+.filtro-menu li:hover {
+    background-color: #f2f8ff;
+    padding-left: 24px;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/*------------------------------------------*/
+
 
 /* Animación de entrada */
 @keyframes fadeIn {
