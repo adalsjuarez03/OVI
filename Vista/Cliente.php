@@ -68,10 +68,12 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
         <div class="dropdown-filtro">
             <button class="btn filter" onclick="toggleFiltroMenu()">🎯 Filtros</button>
             <ul class="filtro-menu" id="filtroMenu">
-                <li onclick="filtrarColumna('concluido')">✅ Concluido / ❌ Cancelado</li>
-                <li onclick="filtrarColumna('asignado')">🛠 Asignado</li>
-                <li onclick="filtrarColumna('no-asignado')">🕓 No asignado</li>
                 <li onclick="filtrarColumna('todas')">🔄 Mostrar todas</li>
+                <li onclick="filtrarColumna('no-asignado')">🕓 No asignado</li>
+                <li onclick="filtrarColumna('asignado')">🛠 Asignado</li>
+                <li onclick="filtrarColumna('concluido')">✅ Concluido / ❌ Cancelado</li>
+                
+                
             </ul>
         </div>
     </div>
