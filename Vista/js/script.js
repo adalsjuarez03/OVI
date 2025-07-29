@@ -127,17 +127,31 @@ function dropAtEnd(ev) {
   alert("Aquí se mostrará más información del servicio.");
   // O puedes mostrar un modal con datos cargados por JavaScript
 }
-function verDetalle() {
-  // Estos valores puedes cambiarlos dinámicamente si los pasas con data-* o AJAX
-  document.getElementById("detalleTitulo").innerText = "SEyT-UI-160 - Generar sesión Zoom";
-  document.getElementById("detalleEstatus").innerText = "CONCLUIDO";
-  document.getElementById("detalleTurnado").innerText = "DIAZ TORAL CARLOS ARTURO";
-  document.getElementById("detalleFecha").innerText = "03/04/2025 12:58:22";
-  document.getElementById("detalleDescripcion").innerText = 
-    "Solicitud para generar una sesión de videoconferencia a través de las aplicación Zoom de la cual anexo memorándum No. SEyT/S'SNECH/DVIO/097/2025 de fecha 3 a abril del 2025.";
+function verDetalle(idServicio) {
+    fetch('./AJAX/getservicio.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'id=' + encodeURIComponent(idServicio)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert('Error: ' + data.error);
+            return;
+        }
 
-  document.getElementById("detalleModal").style.display = "block";
+        document.getElementById('detalleTitulo').textContent = data.numero_servicio;
+        document.getElementById('detalleEstatus').textContent = data.estatus;
+        document.getElementById('detalleTurnado').textContent = data.turnado;
+        document.getElementById('detalleFecha').textContent = data.fecha;
+        document.getElementById('detalleDescripcion').textContent = data.descripcion;
+
+        document.getElementById('detalleModal').style.display = 'block';
+    });
 }
+
 
 function cerrarModalDetalle() {
   document.getElementById("detalleModal").style.display = "none";

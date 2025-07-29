@@ -89,7 +89,7 @@ while ($consulta->fetch()) {
               </div>
               <span class="dots" onclick="toggleMenu(this)">⋮</span>
               <ul class="dropdown">
-                <li onclick="verDetalle('<?php echo htmlspecialchars($servicio['Numero_servicio']); ?>','<?php echo $servicio['Estatus']; ?>','<?php echo $servicio['Turnado']; ?>','<?php echo date("d/m/Y", strtotime($servicio['Fecha_solicitud'])); ?>','<?php echo htmlspecialchars($servicio['Descripcion']); ?>')">👁 Ver</li>
+                <li onclick="verDetalle(<?php echo $servicio['Id_servicio']; ?>)">👁 Ver</li>
                 <li>✏️ Editar</li>
                 <li>🗑 Eliminar</li>
               </ul>
@@ -115,17 +115,42 @@ while ($consulta->fetch()) {
 </div>
 
 <!-- Modal Detalle -->
+<!-- Modal Detalle Mejorado -->
 <div id="detalleModal" class="modal">
   <div class="modal-content">
     <span class="close-btn" onclick="cerrarModalDetalle()">×</span>
-    <h3 id="detalleTitulo"></h3>
-    <p><strong>Estatus:</strong> <span id="detalleEstatus"></span></p>
-    <p><strong>Turnado a:</strong> <span id="detalleTurnado"></span></p>
-    <p><strong>Fecha de solicitud:</strong> <span id="detalleFecha"></span></p>
-    <p><strong>Descripción completa:</strong></p>
-    <p id="detalleDescripcion" style="white-space: pre-wrap;"></p>
+    <div class="modal-header">
+      <h2 id="detalleTitulo" class="titulo-modal"></h2>
+    </div>
+
+    <div class="modal-body">
+      <div class="info-group">
+        <span class="info-label"><strong>🟢 Estatus:</strong></span>
+        <span class="info-value" id="detalleEstatus"></span>
+      </div>
+
+      <div class="info-group">
+        <span class="info-label"><strong>👨‍💼 Turnado a:</strong></span>
+        <span class="info-value" id="detalleTurnado"></span>
+      </div>
+
+      <div class="info-group">
+      </div><strong>📅 Fecha de solicitud:</strong></span>
+        <span class="info-value" id="detalleFecha"></span>
+      </div>
+
+      <div class="info-group">
+        <span class="info-label"><strong>📝 Descripción:</strong></span>
+        <div class="descripcion-detalle" id="detalleDescripcion"></div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn close-btn" onclick="cerrarModalDetalle()">Cerrar</button>
+    </div>
   </div>
 </div>
+
 
 <script src="./js/script.js"></script>
 </body>

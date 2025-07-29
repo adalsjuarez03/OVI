@@ -226,37 +226,31 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
             <p><strong>Descripción completa:</strong></p>
             <p id="detalleDescripcion" style="white-space: pre-wrap;"></p>
         </div>
+        <div class="modal-footer">
+      <button class="btn close-btn" onclick="cerrarModalDetalle()">Cerrar</button>
     </div>
+    </div>
+<!-- Modal Editar Servicio -->
+<div id="editarModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="cerrarModalEditar()">×</span>
+    <h3>Editar Descripción del Servicio</h3>
+    <form id="editarForm">
+      <input type="hidden" id="editarIdServicio" name="id_servicio">
+      <div class="form-group">
+        <label for="nuevaDescripcion">Nueva descripción:</label>
+        <textarea id="nuevaDescripcion" name="descripcion" required></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="close-btn" onclick="cerrarModalEditar()">Cancelar</button>
+        <button type="submit" class="submit-btn">Guardar cambios</button>
+      </div>
+    </form>
+  </div>
+</div>
 
     <script src="./js/cliente.js"></script>
 
-    <script>
-        function toggleFiltroMenu() {
-            const menu = document.getElementById("filtroMenu");
-            menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
-        }
-
-        // Ocultar al hacer clic fuera del menú
-        window.addEventListener('click', function(e) {
-            if (!e.target.closest('.dropdown-filtro')) {
-                document.getElementById("filtroMenu").style.display = "none";
-            }
-        });
-
-        function filtrarColumna(tipo) {
-            const columnas = {
-                'concluido': document.getElementById('concluido-col'),
-                'asignado': document.getElementById('asignado-col'),
-                'no-asignado': document.getElementById('no-asignado-col'),
-            };
-
-            for (let key in columnas) {
-                columnas[key].style.display = (tipo === 'todas' || tipo === key) ? 'block' : 'none';
-            }
-
-            document.getElementById("filtroMenu").style.display = "none";
-        }
-    </script>
 </body>
 
 </html>

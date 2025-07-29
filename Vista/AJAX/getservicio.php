@@ -2,9 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// ✅ CORREGIDO: ruta correcta al archivo de conexión
 require_once '../../Modelo/Conexion.php';
-
 $conn = Conexion::conectar();
 
 if (isset($_POST['id'])) {
@@ -16,11 +14,35 @@ if (isset($_POST['id'])) {
     $resultado = $stmt->get_result();
 
     if ($row = $resultado->fetch_assoc()) {
-        // ✅ Devolver los datos en JSON para mostrar en el modal
+
+        // Formato del número de servicio
+        $numero_servicio = 'SEyT-SISNE-OVIO-' . $row['Id_servicio'];
+
+        // Traducir estatus a algo más legible
+        $estatus_legible = '';
+        switch ($row['Estatus']) {
+            case 'asignado':
+                $estatus_legible = 'Asignado';
+                break;
+            case 'no-asignado':
+                $estatus_legible = 'No asignado';
+                break;
+            case 'concluido':
+            case 'cancelado':
+                $estatus_legible = 'Concluido / Cancelado';
+                break;
+            default:
+                $estatus_legible = 'Sin especificar';
+        }
+
+        // Formatear la fecha con hora
+        $fecha_formateada = date('d/m/Y H:i', strtotime($row['Fecha_solicitud']));
+
         echo json_encode([
-            'estatus' => $row['Estatus'],
+            'numero_servicio' => $numero_servicio,
+            'estatus' => $estatus_legible,
             'turnado' => $row['Turnado'],
-            'fecha' => date('d/m/Y', strtotime($row['Fecha_solicitud'])),
+            'fecha' => $fecha_formateada,
             'descripcion' => $row['Descripcion']
         ]);
     } else {
@@ -29,4 +51,3 @@ if (isset($_POST['id'])) {
 } else {
     echo json_encode(['error' => 'ID no recibido']);
 }
-?>

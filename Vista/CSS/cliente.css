@@ -805,7 +805,7 @@ body {
     border-radius: 20px;
     font-size: 13px;
     font-weight: 600;
-    color: #fff;
+    color: #484844;
     text-transform: uppercase;
 }
 #detalleEstatus.cancelado {
@@ -818,7 +818,7 @@ body {
     background-color: #1890ff;
 }
 #detalleEstatus.no-asignado {
-    background-color: #d9d9d9;
+    background-color: #d7ed12;
     color: #000;
 }
 /*---------------------------------------------*/
@@ -893,4 +893,31 @@ body {
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.95); }
     to { opacity: 1; transform: scale(1); }
+}
+
+.modal-footer .btn.close-btn {
+  background-color: #bdc3c7;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.modal-footer .btn.close-btn:hover {
+  background-color: #95a5a6;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+}
+
+.close-btn:hover {
+  color: #333;
 }
