@@ -69,10 +69,26 @@ body {
 }
 
 .section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap; /* permite que los botones bajen en pantallas pequeñas */
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px; /* separación entre elementos */
+    margin-bottom: 20px;
+}
+.section-header h2 {
+    flex: 1 1 100%;
+    margin-bottom: 10px;
+}
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.actions .btn,
+.actions .dropdown-filtro {
+    flex-shrink: 0;
 }
 
 .btn {
