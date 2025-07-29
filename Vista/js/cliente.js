@@ -76,17 +76,36 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Agrega eventos a los botones ✏️ Editar
-    document.querySelectorAll('.dropdown li:nth-child(2)').forEach(el => {
-        el.addEventListener('click', function () {
-            const card = el.closest('.kanban-card');
-            const idServicio = card.getAttribute('data-id');
-            const descripcionActual = card.querySelector('.descripcion').textContent.trim();
+   document.querySelectorAll('.dropdown li:nth-child(2)').forEach(el => {
+    el.addEventListener('click', function () {
+        const card = el.closest('.kanban-card');
+        const idServicio = card.getAttribute('data-id');
+
+        fetch('./AJAX/getservicio.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'id=' + encodeURIComponent(idServicio)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) {
+                alert('Error: ' + data.error);
+                return;
+            }
 
             document.getElementById('editarIdServicio').value = idServicio;
-            document.getElementById('nuevaDescripcion').value = descripcionActual;
+            document.getElementById('nuevaDescripcion').value = data.descripcion;
             document.getElementById('editarModal').style.display = 'block';
+        })
+        .catch(err => {
+            console.error('Error al cargar descripción completa:', err);
+            alert('Ocurrió un error al obtener la descripción');
         });
     });
+});
+
 
     // Enviar cambios del formulario editar
     document.getElementById('editarForm').addEventListener('submit', function (e) {

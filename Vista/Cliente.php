@@ -97,7 +97,7 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
                                 echo '<ul class="dropdown">';
                                 echo '<li onclick="verDetalle(this)">👁 Ver</li>';
-                                echo '<li>✏️ Editar</li>';
+                                echo '<li onclick="editarDescripcion(this)">✏️ Editar</li>';
                                 echo '<li>❌ Cancelar</li>';
                                 echo '</ul>';
                                 echo '</div>';
@@ -129,7 +129,7 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
                                 echo '<ul class="dropdown">';
                                 echo '<li onclick="verDetalle(this)">👁 Ver</li>';
-                                echo '<li>✏️ Editar</li>';
+                                echo '<li onclick="editarDescripcion(this)">✏️ Editar</li>';
                                 echo '<li>❌ Cancelar</li>';
                                 echo '</ul>';
                                 echo '</div>';
@@ -161,7 +161,7 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
                                 echo '<ul class="dropdown">';
                                 echo '<li onclick="verDetalle(this)">👁 Ver</li>';
-                                echo '<li>✏️ Editar</li>';
+                                echo '<li onclick="editarDescripcion(this)">✏️ Editar</li>';
                                 echo '<li>❌ Cancelar</li>';
                                 echo '</ul>';
                                 echo '</div>';
@@ -226,9 +226,6 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
             <p><strong>Descripción completa:</strong></p>
             <p id="detalleDescripcion" style="white-space: pre-wrap;"></p>
         </div>
-        <div class="modal-footer">
-      <button class="btn close-btn" onclick="cerrarModalDetalle()">Cerrar</button>
-    </div>
     </div>
 <!-- Modal Editar Servicio -->
 <div id="editarModal" class="modal">
