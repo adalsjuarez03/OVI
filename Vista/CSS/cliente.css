@@ -990,30 +990,85 @@ body {
     to   { opacity: 1; transform: translateY(0); }
 }
 .chat-modal {
-    max-width: 500px;
+  max-width: 500px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Montserrat', sans-serif;
+}
+.chat-title {
+  margin-top: 0;
+  font-size: 20px;
+  font-weight: 600;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
 }
 .chat-mensajes {
-    border: 1px solid #ccc;
-    padding: 10px;
-    height: 300px;
-    overflow-y: auto;
-    margin-bottom: 10px;
-    background: #f9f9f9;
+  border: 1px solid #ccc;
+  padding: 12px;
+  height: 300px;
+  overflow-y: auto;
+  background: #f5f7fa;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 .chat-mensaje {
-    margin-bottom: 8px;
-    padding: 5px 10px;
-    border-radius: 10px;
-    max-width: 80%;
-    word-wrap: break-word;
-}
-.chat-mensaje.admin {
-    text-align: right;
-    background-color: #d1e7ff;
-    margin-left: auto;
+  padding: 10px 14px;
+  border-radius: 16px;
+  max-width: 80%;
+  word-wrap: break-word;
+  font-size: 14px;
+  line-height: 1.4;
 }
 .chat-mensaje.cliente {
-    text-align: left;
-    background-color: #d4edda;
-    margin-right: auto;
+  align-self: flex-start;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+.chat-mensaje.admin {
+  align-self: flex-end;
+  background-color: #d1e7ff;
+  color: #004085;
+  border: 1px solid #b8daff;
+}
+.chat-form {
+  display: flex;
+  flex-direction: column;
+}
+.chat-input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.chat-input-container textarea {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  resize: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+}
+.chat-input-container .submit-btn {
+  background-color: #007bff;
+  border: none;
+  padding: 10px 16px;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.chat-input-container .submit-btn:hover {
+  background-color: #0056b3;
+}
+.badge.cancelado {
+    background-color: #f44336;
+    color: #fff;
 }

@@ -17,6 +17,38 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!e.target.matches(".dots")) {
             document.querySelectorAll(".dropdown").forEach(el => el.style.display = "none");
         }
+
+        // Funcionalidad para "❌ Cancelar"
+        if (e.target.textContent.trim() === "❌ Cancelar") {
+            const card = e.target.closest(".kanban-card");
+            const id = card.getAttribute("data-id");
+
+            if (confirm("¿Estás seguro de que deseas cancelar este servicio?")) {
+                fetch("AJAX/cancelar_servicio.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: "id=" + encodeURIComponent(id),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Cambiar visualmente la tarjeta
+                        card.setAttribute("data-status", "cancelado");
+                        const badge = card.querySelector(".badge");
+                        badge.textContent = "CANCELADO";
+                        badge.className = "badge cancelado";
+
+                        // Mover la tarjeta a la columna correspondiente
+                        document.querySelector("#concluido-col .kanban-list").appendChild(card);
+                    } else {
+                        alert("Error al cancelar: " + (data.error || "Desconocido"));
+                    }
+                })
+                .catch(err => {
+                    alert("Error de red: " + err.message);
+                });
+            }
+        }
     });
 
     document.getElementById('toggleSidebar').addEventListener('click', function () {
@@ -47,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
         fileName.textContent = this.files.length > 0 ? this.files[0].name : "";
     });
 
-    // Enviar solicitud con AJAX (fetch)
+    // Enviar solicitud con AJAX
     document.getElementById("solicitudForm").addEventListener("submit", function (e) {
         e.preventDefault();
         const formData = new FormData(this);
@@ -56,58 +88,57 @@ document.addEventListener("DOMContentLoaded", function () {
             method: "POST",
             body: formData,
         })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Solicitud enviada con éxito!");
-                    location.reload();
-                } else {
-                    alert("Error al registrar: " + (data.error || "Error desconocido"));
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("Ocurrió un error al enviar la solicitud.");
-            });
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Solicitud enviada con éxito!");
+                location.reload();
+            } else {
+                alert("Error al registrar: " + (data.error || "Error desconocido"));
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Ocurrió un error al enviar la solicitud.");
+        });
 
         modal.style.display = "none";
         this.reset();
         fileName.textContent = "";
     });
 
-    // Agrega eventos a los botones ✏️ Editar
-   document.querySelectorAll('.dropdown li:nth-child(2)').forEach(el => {
-    el.addEventListener('click', function () {
-        const card = el.closest('.kanban-card');
-        const idServicio = card.getAttribute('data-id');
+    // Botón ✏️ Editar
+    document.querySelectorAll('.dropdown li:nth-child(2)').forEach(el => {
+        el.addEventListener('click', function () {
+            const card = el.closest('.kanban-card');
+            const idServicio = card.getAttribute('data-id');
 
-        fetch('./AJAX/getservicio.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: 'id=' + encodeURIComponent(idServicio)
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.error) {
-                alert('Error: ' + data.error);
-                return;
-            }
+            fetch('./AJAX/getservicio.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'id=' + encodeURIComponent(idServicio)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                    return;
+                }
 
-            document.getElementById('editarIdServicio').value = idServicio;
-            document.getElementById('nuevaDescripcion').value = data.descripcion;
-            document.getElementById('editarModal').style.display = 'block';
-        })
-        .catch(err => {
-            console.error('Error al cargar descripción completa:', err);
-            alert('Ocurrió un error al obtener la descripción');
+                document.getElementById('editarIdServicio').value = idServicio;
+                document.getElementById('nuevaDescripcion').value = data.descripcion;
+                document.getElementById('editarModal').style.display = 'block';
+            })
+            .catch(err => {
+                console.error('Error al cargar descripción completa:', err);
+                alert('Ocurrió un error al obtener la descripción');
+            });
         });
     });
-});
 
-
-    // Enviar cambios del formulario editar
+    // Enviar cambios edición
     document.getElementById('editarForm').addEventListener('submit', function (e) {
         e.preventDefault();
         const formData = new FormData(this);
@@ -130,14 +161,40 @@ document.addEventListener("DOMContentLoaded", function () {
             alert('Ocurrió un error');
         });
     });
+
+    // Botón de chat
+    document.querySelectorAll(".kanban-card .chat").forEach(btn => {
+        btn.addEventListener("click", function () {
+            const card = this.closest(".kanban-card");
+            const idServicio = card.getAttribute("data-id");
+            abrirChatModal(idServicio);
+        });
+    });
+
+    // Enviar mensaje chat
+    document.getElementById("formChat").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const idServicio = document.getElementById("chatIdServicio").value;
+        const mensaje = document.getElementById("mensajeChat").value;
+
+        const res = await fetch("AJAX/guardar_mensaje.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `id_servicio=${idServicio}&mensaje=${encodeURIComponent(mensaje)}`
+        });
+
+        if (res.ok) {
+            document.getElementById("mensajeChat").value = "";
+            cargarMensajes(idServicio);
+        }
+    });
 });
 
-// Función para cerrar modal de edición
+// Funciones varias
 function cerrarModalEditar() {
     document.getElementById('editarModal').style.display = 'none';
 }
 
-// Mostrar menú de 3 puntos
 function toggleMenu(element) {
     const menu = element.nextElementSibling;
     menu.style.display = (menu.style.display === "block") ? "none" : "block";
@@ -146,7 +203,6 @@ function toggleMenu(element) {
     });
 }
 
-// VER DETALLE desde BD
 function verDetalle(elemento) {
     const card = elemento.closest('.kanban-card');
     const idServicio = card.getAttribute('data-id');
@@ -174,25 +230,15 @@ function verDetalle(elemento) {
     });
 }
 
-// Cerrar modal detalle
 function cerrarModalDetalle() {
     document.getElementById('detalleModal').style.display = 'none';
 }
 
-window.addEventListener("click", function(event) {
-    const modal = document.getElementById("detalleModal");
-    if (event.target === modal) {
-        modal.style.display = "none";
-    }
-});
-
-// Filtro de columnas
 function toggleFiltroMenu() {
     const menu = document.getElementById("filtroMenu");
     menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
 }
 
-// Ocultar menú filtro al hacer clic fuera
 window.addEventListener('click', function(e) {
     if (!e.target.closest('.dropdown-filtro')) {
         document.getElementById("filtroMenu").style.display = "none";
@@ -212,56 +258,30 @@ function filtrarColumna(tipo) {
 
     document.getElementById("filtroMenu").style.display = "none";
 }
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".kanban-card .chat").forEach(btn => {
-    btn.addEventListener("click", function () {
-      const card = this.closest(".kanban-card");
-      const idServicio = card.getAttribute("data-id");
-      abrirChatModal(idServicio);
-    });
-  });
-
-  document.getElementById("formChat").addEventListener("submit", async function (e) {
-    e.preventDefault();
-    const idServicio = document.getElementById("chatIdServicio").value;
-    const mensaje = document.getElementById("mensajeChat").value;
-
-    const res = await fetch("AJAX/guardar_mensaje.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `id_servicio=${idServicio}&mensaje=${encodeURIComponent(mensaje)}`
-    });
-
-    if (res.ok) {
-      document.getElementById("mensajeChat").value = "";
-      cargarMensajes(idServicio);
-    }
-  });
-});
 
 function abrirChatModal(idServicio) {
-  document.getElementById("chatIdServicio").value = idServicio;
-  document.getElementById("chatModal").style.display = "block";
-  cargarMensajes(idServicio);
+    document.getElementById("chatIdServicio").value = idServicio;
+    document.getElementById("chatModal").style.display = "block";
+    cargarMensajes(idServicio);
 }
 
 function cerrarChatModal() {
-  document.getElementById("chatModal").style.display = "none";
+    document.getElementById("chatModal").style.display = "none";
 }
 
 async function cargarMensajes(idServicio) {
-  const res = await fetch(`AJAX/obtener_mensaje.php?id_servicio=${idServicio}`);
-  const mensajes = await res.json();
+    const res = await fetch(`AJAX/obtener_mensaje.php?id_servicio=${idServicio}`);
+    const mensajes = await res.json();
 
-  const contenedor = document.getElementById("chatMensajes");
-  contenedor.innerHTML = "";
+    const contenedor = document.getElementById("chatMensajes");
+    contenedor.innerHTML = "";
 
-  mensajes.forEach(m => {
-    const div = document.createElement("div");
-    div.className = `chat-mensaje ${m.emisor}`;
-    div.innerText = `${m.emisor === 'cliente' ? 'Tú' : 'Admin'}: ${m.mensaje}`;
-    contenedor.appendChild(div);
-  });
+    mensajes.forEach(m => {
+        const div = document.createElement("div");
+        div.className = `chat-mensaje ${m.emisor}`;
+        div.innerText = `${m.emisor === 'cliente' ? 'Tú' : 'Admin'}: ${m.mensaje}`;
+        contenedor.appendChild(div);
+    });
 
-  contenedor.scrollTop = contenedor.scrollHeight;
+    contenedor.scrollTop = contenedor.scrollHeight;
 }

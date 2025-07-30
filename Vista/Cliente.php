@@ -97,8 +97,10 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
                                 echo '<ul class="dropdown">';
                                 echo '<li onclick="verDetalle(this)">👁 Ver</li>';
+                                    if ($row['Estatus'] !== 'cancelado' && $row['Estatus'] !== 'concluido') {
                                 echo '<li onclick="editarDescripcion(this)">✏️ Editar</li>';
                                 echo '<li>❌ Cancelar</li>';
+                                }
                                 echo '</ul>';
                                 echo '</div>';
                                 echo '<div class="card-body">';
@@ -129,8 +131,10 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
                                 echo '<ul class="dropdown">';
                                 echo '<li onclick="verDetalle(this)">👁 Ver</li>';
+                                    if ($row['Estatus'] !== 'cancelado' && $row['Estatus'] !== 'concluido') {
                                 echo '<li onclick="editarDescripcion(this)">✏️ Editar</li>';
                                 echo '<li>❌ Cancelar</li>';
+                                }
                                 echo '</ul>';
                                 echo '</div>';
                                 echo '<div class="card-body">';
@@ -161,8 +165,10 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
                                 echo '<ul class="dropdown">';
                                 echo '<li onclick="verDetalle(this)">👁 Ver</li>';
+                                    if ($row['Estatus'] !== 'cancelado' && $row['Estatus'] !== 'concluido') {
                                 echo '<li onclick="editarDescripcion(this)">✏️ Editar</li>';
                                 echo '<li>❌ Cancelar</li>';
+                                }
                                 echo '</ul>';
                                 echo '</div>';
                                 echo '<div class="card-body">';
@@ -250,17 +256,19 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
 <div id="chatModal" class="modal">
   <div class="modal-content chat-modal">
     <span class="close-btn" onclick="cerrarChatModal()">×</span>
-    <h3>💬 Chat con Administrador</h3>
+    <h3 class="chat-title">💬 Chat con Administrador</h3>
     <div id="chatMensajes" class="chat-mensajes"></div>
-    <form id="formChat">
+    <form id="formChat" class="chat-form">
       <input type="hidden" id="chatIdServicio">
-      <textarea id="mensajeChat" placeholder="Escribe tu mensaje..." required></textarea>
-      <button type="submit" class="submit-btn">Enviar</button>
+      <div class="chat-input-container">
+        <textarea id="mensajeChat" placeholder="Escribe tu mensaje..." required></textarea>
+        <button type="submit" class="submit-btn">Enviar</button>
+      </div>
     </form>
   </div>
 </div>
 
-    <script src="./js/cliente.js"></script>
+ <script src="./js/cliente.js"></script>
 
 </body>
 
