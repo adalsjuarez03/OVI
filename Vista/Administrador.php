@@ -151,6 +151,19 @@ while ($consulta->fetch()) {
   </div>
 </div>
 
+<!-- Modal de Chat (Admin) -->
+<div id="chatModal" class="modal">
+  <div class="modal-content chat-modal">
+    <span class="close-btn" onclick="cerrarChatModal()">×</span>
+    <h3>💬 Chat con Cliente</h3>
+    <div id="chatMensajes" class="chat-mensajes"></div>
+    <form id="formChat">
+      <input type="hidden" id="chatIdServicio">
+      <textarea id="mensajeChat" placeholder="Escribe tu respuesta..." required></textarea>
+      <button type="submit" class="submit-btn">Enviar</button>
+    </form>
+  </div>
+</div>
 
 <script src="./js/script.js"></script>
 </body>

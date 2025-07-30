@@ -212,3 +212,56 @@ function filtrarColumna(tipo) {
 
     document.getElementById("filtroMenu").style.display = "none";
 }
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".kanban-card .chat").forEach(btn => {
+    btn.addEventListener("click", function () {
+      const card = this.closest(".kanban-card");
+      const idServicio = card.getAttribute("data-id");
+      abrirChatModal(idServicio);
+    });
+  });
+
+  document.getElementById("formChat").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const idServicio = document.getElementById("chatIdServicio").value;
+    const mensaje = document.getElementById("mensajeChat").value;
+
+    const res = await fetch("AJAX/guardar_mensaje.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `id_servicio=${idServicio}&mensaje=${encodeURIComponent(mensaje)}`
+    });
+
+    if (res.ok) {
+      document.getElementById("mensajeChat").value = "";
+      cargarMensajes(idServicio);
+    }
+  });
+});
+
+function abrirChatModal(idServicio) {
+  document.getElementById("chatIdServicio").value = idServicio;
+  document.getElementById("chatModal").style.display = "block";
+  cargarMensajes(idServicio);
+}
+
+function cerrarChatModal() {
+  document.getElementById("chatModal").style.display = "none";
+}
+
+async function cargarMensajes(idServicio) {
+  const res = await fetch(`AJAX/obtener_mensaje.php?id_servicio=${idServicio}`);
+  const mensajes = await res.json();
+
+  const contenedor = document.getElementById("chatMensajes");
+  contenedor.innerHTML = "";
+
+  mensajes.forEach(m => {
+    const div = document.createElement("div");
+    div.className = `chat-mensaje ${m.emisor}`;
+    div.innerText = `${m.emisor === 'cliente' ? 'Tú' : 'Admin'}: ${m.mensaje}`;
+    contenedor.appendChild(div);
+  });
+
+  contenedor.scrollTop = contenedor.scrollHeight;
+}
