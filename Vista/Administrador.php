@@ -88,14 +88,14 @@ while ($consulta->fetch()) {
                 <small class="created">📅 <?php echo date("d/m/Y", strtotime($servicio['Fecha_solicitud'])); ?></small>
               </div>
               <span class="dots" onclick="toggleMenu(this)">⋮</span>
-              <ul class="dropdown">
-  <li onclick="verDetalle(<?php echo $servicio['Id_servicio']; ?>)">👁 Ver</li>
-  <li onclick="asignarServicio(<?php echo $servicio['Id_servicio']; ?>)">✅ Asignar</li>
-  <li onclick="concluirServicio(<?php echo $servicio['Id_servicio']; ?>)">✔️ Concluir</li>
-</ul>
-
+            <ul class="dropdown">
+              <li onclick="verDetalle(<?php echo $servicio['Id_servicio']; ?>)">👁 Ver</li>
+              <?php if (strtolower($servicio['Estatus']) !== 'concluido' && strtolower($servicio['Estatus']) !== 'cancelado'): ?>
+                <li onclick="asignarServicio(<?php echo $servicio['Id_servicio']; ?>)">✅ Asignar</li>
+                <li onclick="concluirServicio(<?php echo $servicio['Id_servicio']; ?>)">✔️ Concluir</li>
+              <?php endif; ?>
+            </ul>
             </div>
-
             <div class="card-body">
               <div class="tags">
                 <span class="tag">#<?php echo htmlspecialchars($servicio['Numero_servicio']); ?></span>
@@ -116,7 +116,6 @@ while ($consulta->fetch()) {
 </div>
 
 <!-- Modal Detalle -->
-<!-- Modal Detalle Mejorado -->
 <div id="detalleModal" class="modal">
   <div class="modal-content">
     <span class="close-btn" onclick="cerrarModalDetalle()">×</span>
@@ -152,7 +151,7 @@ while ($consulta->fetch()) {
   </div>
 </div>
 
-<!-- Modal de Chat (Admin) -->
+<!-- Modal de Chat -->
 <div id="chatModal" class="modal">
   <div class="modal-content chat-modal">
     <span class="close-btn" onclick="cerrarChatModal()">×</span>
