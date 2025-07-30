@@ -213,3 +213,37 @@ async function cargarMensajes(idServicio) {
 
   contenedor.scrollTop = contenedor.scrollHeight;
 }
+function concluirServicio(idServicio) {
+  if (!confirm("¿Estás seguro de marcar este servicio como CONCLUIDO?")) return;
+
+  fetch('./AJAX/concluir_servicio.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: 'id_servicio=' + encodeURIComponent(idServicio)
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        const card = document.getElementById('servicio-' + idServicio);
+
+        // Cambiar visualmente la tarjeta
+        card.classList.remove('no-asignado', 'asignado');
+        card.classList.add('concluido');
+
+        // Cambiar texto del badge
+        const badge = card.querySelector('.badge');
+        badge.textContent = 'CONCLUIDO';
+        badge.className = 'badge concluido';
+
+        alert('Servicio marcado como CONCLUIDO');
+      } else {
+        alert('Error al concluir el servicio: ' + data.error);
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Error al conectar con el servidor.');
+    });
+}

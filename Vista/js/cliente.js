@@ -264,6 +264,31 @@ function abrirChatModal(idServicio) {
     document.getElementById("chatModal").style.display = "block";
     cargarMensajes(idServicio);
 }
+let intervaloChat = null;
+
+function abrirChatModal(idServicio) {
+    document.getElementById("chatIdServicio").value = idServicio;
+    document.getElementById("chatModal").style.display = "block";
+    cargarMensajes(idServicio);
+
+    // Evita duplicar intervalos si el usuario abre el mismo chat varias veces
+    if (intervaloChat) clearInterval(intervaloChat);
+
+    intervaloChat = setInterval(() => {
+        cargarMensajes(idServicio);
+    }, 3000); // Cada 3 segundos se actualiza el chat
+}
+
+function cerrarChatModal() {
+    document.getElementById("chatModal").style.display = "none";
+
+    // Detiene el polling cuando se cierra el modal
+    if (intervaloChat) {
+        clearInterval(intervaloChat);
+        intervaloChat = null;
+    }
+}
+
 
 function cerrarChatModal() {
     document.getElementById("chatModal").style.display = "none";
@@ -284,4 +309,77 @@ async function cargarMensajes(idServicio) {
     });
 
     contenedor.scrollTop = contenedor.scrollHeight;
+}
+document.addEventListener("DOMContentLoaded", function () {
+  actualizarServicios(); // Cargar al inicio
+  setInterval(actualizarServicios, 10000); // Cada 10 segundos
+});
+
+function actualizarServicios() {
+  fetch('AJAX/servicios_cliente.php')
+    .then(response => response.json())
+    .then(servicios => {
+      // Limpiar columnas
+      document.querySelector('#no-asignado-col .kanban-list').innerHTML = '';
+      document.querySelector('#asignado-col .kanban-list').innerHTML = '';
+      document.querySelector('#concluido-col .kanban-list').innerHTML = '';
+
+      servicios.forEach(servicio => {
+        const tarjeta = crearTarjeta(servicio);
+        if (servicio.estatus === 'no-asignado') {
+          document.querySelector('#no-asignado-col .kanban-list').appendChild(tarjeta);
+        } else if (servicio.estatus === 'asignado') {
+          document.querySelector('#asignado-col .kanban-list').appendChild(tarjeta);
+        } else if (servicio.estatus === 'concluido' || servicio.estatus === 'cancelado') {
+          document.querySelector('#concluido-col .kanban-list').appendChild(tarjeta);
+        }
+      });
+    });
+}
+
+function crearTarjeta(servicio) {
+  const div = document.createElement('div');
+  div.className = `kanban-card ${servicio.estatus}`;
+  div.setAttribute('data-status', servicio.estatus);
+  div.setAttribute('data-id', servicio.id);
+
+  const fecha = new Date(servicio.fecha).toLocaleDateString('es-MX');
+
+  // Construir opciones del menú dinámicamente
+  let opciones = `<li onclick="verDetalle(this)">👁 Ver</li>`;
+  if (servicio.estatus === "no-asignado" || servicio.estatus === "asignado") {
+    opciones += `
+      <li onclick="editarDescripcion(this)">✏️ Editar</li>
+      <li>❌ Cancelar</li>
+    `;
+  }
+
+  div.innerHTML = `
+    <div class="card-header">
+      <div class="left">
+        <span class="badge ${servicio.estatus}">${servicio.estatus.toUpperCase()}</span>
+        <small class="created">📅 ${fecha}</small>
+      </div>
+      <span class="dots" onclick="toggleMenu(this)">⋮</span>
+      <ul class="dropdown">
+        ${opciones}
+      </ul>
+    </div>
+    <div class="card-body">
+      <div class="tags"><span class="tag">#${servicio.numero}</span></div>
+      <h4 class="titulo-servicio">${servicio.descripcion.slice(0, 30)}...</h4>
+      <p class="descripcion">${servicio.descripcion.slice(0, 60)}...</p>
+    </div>
+    <div class="kanban-footer">
+      <div class="asignado">${servicio.turnado}</div>
+      <button class="btn chat">💬</button>
+    </div>
+  `;
+
+  // Chat
+  div.querySelector('.chat').addEventListener('click', () => {
+    abrirChatModal(servicio.id);
+  });
+
+  return div;
 }

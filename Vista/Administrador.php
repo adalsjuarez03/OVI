@@ -89,10 +89,11 @@ while ($consulta->fetch()) {
               </div>
               <span class="dots" onclick="toggleMenu(this)">⋮</span>
               <ul class="dropdown">
-                <li onclick="verDetalle(<?php echo $servicio['Id_servicio']; ?>)">👁 Ver</li>
-                <li>✏️ Editar</li>
-                <li>🗑 Eliminar</li>
-              </ul>
+  <li onclick="verDetalle(<?php echo $servicio['Id_servicio']; ?>)">👁 Ver</li>
+  <li onclick="asignarServicio(<?php echo $servicio['Id_servicio']; ?>)">✅ Asignar</li>
+  <li onclick="concluirServicio(<?php echo $servicio['Id_servicio']; ?>)">✔️ Concluir</li>
+</ul>
+
             </div>
 
             <div class="card-body">
