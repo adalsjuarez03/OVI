@@ -25,7 +25,6 @@ $usuario = $resultado->fetch_assoc();
 if (!$usuario) {
     die("Usuario no encontrado.");
 }
-
 // Procesar actualización si se envió el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = $_POST['nombre'];
