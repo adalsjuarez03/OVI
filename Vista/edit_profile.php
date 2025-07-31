@@ -28,12 +28,14 @@ if (!$usuario) {
 // Procesar actualización si se envió el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = $_POST['nombre'];
+    $apellido = $_POST['apellido']; 
     $correo = $_POST['correo'];
     $telefono = $_POST['telefono'];
 
     // Actualizar los datos en la base de datos
-    $stmt = $conexion->prepare("UPDATE usuarios SET nombre = ?, correo = ?, telefono = ? WHERE id_usuario = ?");
-    $stmt->bind_param("sssi", $nombre, $correo, $telefono, $usuario_id);
+    $stmt = $conexion->prepare("UPDATE usuarios SET nombre = ?, apellido = ?, correo = ?, telefono = ? WHERE id_usuario = ?");
+    $stmt->bind_param("ssssi", $nombre, $apellido, $correo, $telefono, $usuario_id);
+
 
     if ($stmt->execute()) {
         $mensaje = "Perfil actualizado correctamente";
@@ -56,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="./CSS/editar_perfil.css">
 </head>
+
 <body>
     <div class="profile-container">
         <div class="profile-header">
@@ -79,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="avatar">
                         <?php echo strtoupper(substr($usuario['nombre'], 0, 1)); ?>
                     </div>
-                    <h2><?php echo htmlspecialchars($usuario['nombre']); ?></h2>
+                    <h2><?php echo htmlspecialchars($usuario['nombre'] . ' ' . $usuario['apellido']); ?></h2>
                     <p>Cliente</p>
                 </div>
 
@@ -117,8 +121,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-row">
                         <div class="form-col">
                             <div class="form-group">
-                                <label for="nombre">Nombre completo</label>
+                                <label for="nombre">Nombre</label>
                                 <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" required>
+
+                                <label for="apellido">Apellidos</label>
+    <input type="text" id="apellido" name="apellido" value="<?php echo htmlspecialchars($usuario['apellido']); ?>" required>
                             </div>
                         </div>
                     </div>
@@ -176,6 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
-<script src="./js/editar_perfil.js"></script>
+    <script src="./js/editar_perfil.js"></script>
 </body>
+
 </html>
