@@ -383,3 +383,30 @@ function crearTarjeta(servicio) {
 
   return div;
 }
+function editarDescripcion(elemento) {
+    const card = elemento.closest('.kanban-card');
+    const idServicio = card.getAttribute('data-id');
+
+    fetch('./AJAX/getservicio.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'id=' + encodeURIComponent(idServicio)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            alert('Error: ' + data.error);
+            return;
+        }
+
+        document.getElementById('editarIdServicio').value = idServicio;
+        document.getElementById('nuevaDescripcion').value = data.descripcion;
+        document.getElementById('editarModal').style.display = 'block';
+    })
+    .catch(err => {
+        console.error('Error al cargar descripción completa:', err);
+        alert('Ocurrió un error al obtener la descripción');
+    });
+}
