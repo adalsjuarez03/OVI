@@ -8,7 +8,21 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') {
 require_once '../Modelo/Conexion.php';
 $conexion = Conexion::conectar();
 
-$nombreAdministrador = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESSION['apellido'] : 'Usuario';
+$usuario_id = $_SESSION['usuario'] ?? null;
+if ($usuario_id) {
+    $stmt = $conexion->prepare("SELECT nombre, apellido FROM usuarios WHERE id_usuario = ?");
+    $stmt->bind_param("i", $usuario_id);
+    $stmt->execute();
+    $stmt->bind_result($nombre, $apellido);
+    $stmt->fetch();
+    $stmt->close();
+
+    $nombreAdministrador = strtoupper($nombre . ' ' . $apellido);
+} else {
+    $nombreAdministrador = 'Usuario';
+}
+
+
 
 $consulta = $conexion->prepare("SELECT Id_servicio, Estatus, Numero_servicio, Descripcion, Turnado, Fecha_solicitud FROM Servicios ORDER BY Fecha_solicitud DESC");
 $consulta->execute();
