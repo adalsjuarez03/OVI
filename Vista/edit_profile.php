@@ -28,31 +28,75 @@ if (!$usuario) {
 // Procesar actualización si se envió el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = $_POST['nombre'];
-    $apellido = $_POST['apellido']; 
+    $apellido = $_POST['apellido'];
     $correo = $_POST['correo'];
     $telefono = $_POST['telefono'];
 
     // Actualizar los datos en la base de datos
-    $stmt = $conexion->prepare("UPDATE usuarios SET nombre = ?, apellido = ?, correo = ?, telefono = ? WHERE id_usuario = ?");
-    $stmt->bind_param("ssssi", $nombre, $apellido, $correo, $telefono, $usuario_id);
+$stmt = $conexion->prepare("UPDATE usuarios SET nombre = ?, apellido = ?, correo = ?, telefono = ? WHERE id_usuario = ?");
+$stmt->bind_param("ssssi", $nombre, $apellido, $correo, $telefono, $usuario_id);
+
+if ($stmt->execute()) {
+    $mensaje = "Perfil actualizado correctamente";
+    $tipo_mensaje = "success";
+
+    // Actualizar variables locales para mostrar en la página
+    $usuario['nombre'] = $nombre;
+    $usuario['apellido'] = $apellido;    // <-- esta línea faltaba
+    $usuario['correo'] = $correo;
+    $usuario['telefono'] = $telefono;
+
+    // Actualizar datos en la sesión para reflejar en otras páginas
+    $_SESSION['nombre'] = $nombre;
+    $_SESSION['apellido'] = $apellido;
+
+} else {
+    $mensaje = "Error al actualizar el perfil";
+    $tipo_mensaje = "error";
+}
 
 
-    if ($stmt->execute()) {
-        $mensaje = "Perfil actualizado correctamente";
-        $tipo_mensaje = "success";
+    // Validacion de Contraseña
+    $password_actual = $_POST['password_actual'] ?? '';
+$nuevo_password = $_POST['nuevo_password'] ?? '';
+$confirmar_password = $_POST['confirmar_password'] ?? '';
 
-        // Actualizar los datos locales para reflejarlos en pantalla
-        $usuario['nombre'] = $nombre;
-        $usuario['correo'] = $correo;
-        $usuario['telefono'] = $telefono;
+// Solo intentar cambio si se llenan los tres campos
+if (!empty($password_actual) && !empty($nuevo_password) && !empty($confirmar_password)) {
 
-        // (Opcional) Guardar nombre en sesión si lo deseas
-        // $_SESSION['nombre'] = $nombre;
+    // Verificar que el usuario ingresó bien su contraseña actual
+    $stmt = $conexion->prepare("SELECT contrasena FROM usuarios WHERE id_usuario = ?");
+    $stmt->bind_param("i", $usuario_id);
+    $stmt->execute();
+    $stmt->bind_result($clave_actual_guardada);
+    $stmt->fetch();
+    $stmt->close();
+
+    // Comparar con la ingresada (sin hash, como me indicaste antes que no quieres encriptar)
+    if ($password_actual === $clave_actual_guardada) {
+
+        if ($nuevo_password === $confirmar_password) {
+            // Actualizar contraseña
+            $stmt = $conexion->prepare("UPDATE usuarios SET contrasena = ? WHERE id_usuario = ?");
+            $stmt->bind_param("si", $nuevo_password, $usuario_id);
+
+            if ($stmt->execute()) {
+                $mensaje .= "<br>Contraseña actualizada correctamente.";
+            } else {
+                $mensaje .= "<br>Error al actualizar la contraseña.";
+            }
+
+        } else {
+            $mensaje .= "<br>La nueva contraseña y su confirmación no coinciden.";
+            $tipo_mensaje = "error";
+        }
 
     } else {
-        $mensaje = "Error al actualizar el perfil";
+        $mensaje .= "<br>La contraseña actual es incorrecta.";
         $tipo_mensaje = "error";
     }
+}
+
 }
 ?>
 
@@ -76,6 +120,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <img src="https://ovi.economiaytrabajo.chiapas.gob.mx/static/LOGO.png" alt="Logo Oficina Virtual">
             </div>
         </div>
+        <!-- Botón Regresar  -->
+        <div class="btn-regresar-container">
+            <a href="Cliente.php" class="btn-regresar">
+                ← Regresar al panel
+            </a>
+        </div> <br>
+
 
         <div class="profile-content">
             <div class="profile-sidebar">
@@ -93,14 +144,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="profile-stats">
-                    <div class="stat-item">
-                        <span>Servicios activos</span>
-                        <span>3</span>
-                    </div>
-                    <div class="stat-item">
-                        <span>Servicios completados</span>
-                        <span>12</span>
-                    </div>
                     <div class="stat-item">
                         <span>Miembro desde</span>
                         <span><?php echo date('Y', strtotime($usuario['fecha_registro'] ?? 'now')); ?></span>
@@ -125,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" required>
 
                                 <label for="apellido">Apellidos</label>
-    <input type="text" id="apellido" name="apellido" value="<?php echo htmlspecialchars($usuario['apellido']); ?>" required>
+                                <input type="text" id="apellido" name="apellido" value="<?php echo htmlspecialchars($usuario['apellido']); ?>" required>
                             </div>
                         </div>
                     </div>
@@ -152,7 +195,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="form-group password-toggle">
                                 <label for="password_actual">Contraseña actual</label>
                                 <input type="password" id="password_actual" name="password_actual">
-                                <i class="fas fa-eye" onclick="togglePassword('password_actual')"></i>
                             </div>
                         </div>
                     </div>
@@ -162,14 +204,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="form-group password-toggle">
                                 <label for="nuevo_password">Nueva contraseña</label>
                                 <input type="password" id="nuevo_password" name="nuevo_password">
-                                <i class="fas fa-eye" onclick="togglePassword('nuevo_password')"></i>
                             </div>
                         </div>
                         <div class="form-col">
                             <div class="form-group password-toggle">
                                 <label for="confirmar_password">Confirmar nueva contraseña</label>
                                 <input type="password" id="confirmar_password" name="confirmar_password">
-                                <i class="fas fa-eye" onclick="togglePassword('confirmar_password')"></i>
                             </div>
                         </div>
                     </div>
