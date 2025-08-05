@@ -61,23 +61,23 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
             </header>
 
             <section class="content">
-    <div class="section-header">
-    <h2>Servicios solicitados <?php echo strtoupper(htmlspecialchars($nombreCliente)); ?></h2>
-    <div class="actions">
-        <button class="btn new" id="nuevaSolicitudBtn">+ Nueva solicitud</button>
-        <div class="dropdown-filtro">
-            <button class="btn filter" onclick="toggleFiltroMenu()">🎯 Filtros</button>
-            <ul class="filtro-menu" id="filtroMenu">
-                <li onclick="filtrarColumna('todas')">🔄 Mostrar todas</li>
-                <li onclick="filtrarColumna('no-asignado')">🕓 No asignado</li>
-                <li onclick="filtrarColumna('asignado')">🛠 Asignado</li>
-                <li onclick="filtrarColumna('concluido')">✅ Concluido / ❌ Cancelado</li>
-                
-                
-            </ul>
-        </div>
-    </div>
-</div>
+                <div class="section-header">
+                    <h2>Servicios solicitados <?php echo strtoupper(htmlspecialchars($nombreCliente)); ?></h2>
+                    <div class="actions">
+                        <button class="btn new" id="nuevaSolicitudBtn">+ Nueva solicitud</button>
+                        <div class="dropdown-filtro">
+                            <button class="btn filter" onclick="toggleFiltroMenu()">🎯 Filtros</button>
+                            <ul class="filtro-menu" id="filtroMenu">
+                                <li onclick="filtrarColumna('todas')">🔄 Mostrar todas</li>
+                                <li onclick="filtrarColumna('no-asignado')">🕓 No asignado</li>
+                                <li onclick="filtrarColumna('asignado')">🛠 Asignado</li>
+                                <li onclick="filtrarColumna('concluido')">✅ Concluido / ❌ Cancelado</li>
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
 
                 <div class="kanban-container">
@@ -97,9 +97,9 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
                                 echo '<ul class="dropdown">';
                                 echo '<li onclick="verDetalle(this)">👁 Ver</li>';
-                                    if ($row['Estatus'] !== 'cancelado' && $row['Estatus'] !== 'concluido') {
-                                echo '<li onclick="editarDescripcion(this)">✏️ Editar</li>';
-                                echo '<li>❌ Cancelar</li>';
+                                if ($row['Estatus'] !== 'cancelado' && $row['Estatus'] !== 'concluido') {
+                                    echo '<li onclick="editarDescripcion(this)">✏️ Editar</li>';
+                                    echo '<li>❌ Cancelar</li>';
                                 }
                                 echo '</ul>';
                                 echo '</div>';
@@ -131,9 +131,9 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
                                 echo '<ul class="dropdown">';
                                 echo '<li onclick="verDetalle(this)">👁 Ver</li>';
-                                    if ($row['Estatus'] !== 'cancelado' && $row['Estatus'] !== 'concluido') {
-                                echo '<li onclick="editarDescripcion(this)">✏️ Editar</li>';
-                                echo '<li>❌ Cancelar</li>';
+                                if ($row['Estatus'] !== 'cancelado' && $row['Estatus'] !== 'concluido') {
+                                    echo '<li onclick="editarDescripcion(this)">✏️ Editar</li>';
+                                    echo '<li>❌ Cancelar</li>';
                                 }
                                 echo '</ul>';
                                 echo '</div>';
@@ -165,9 +165,9 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
                                 echo '<ul class="dropdown">';
                                 echo '<li onclick="verDetalle(this)">👁 Ver</li>';
-                                    if ($row['Estatus'] !== 'cancelado' && $row['Estatus'] !== 'concluido') {
-                                echo '<li onclick="editarDescripcion(this)">✏️ Editar</li>';
-                                echo '<li>❌ Cancelar</li>';
+                                if ($row['Estatus'] !== 'cancelado' && $row['Estatus'] !== 'concluido') {
+                                    echo '<li onclick="editarDescripcion(this)">✏️ Editar</li>';
+                                    echo '<li>❌ Cancelar</li>';
                                 }
                                 echo '</ul>';
                                 echo '</div>';
@@ -233,42 +233,42 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
             <p id="detalleDescripcion" style="white-space: pre-wrap;"></p>
         </div>
     </div>
-<!-- Modal Editar Servicio -->
-<div id="editarModal" class="modal">
-  <div class="modal-content">
-    <span class="close-btn" onclick="cerrarModalEditar()">×</span>
-    <h3>Editar Descripción del Servicio</h3>
-    <form id="editarForm">
-      <input type="hidden" id="editarIdServicio" name="id_servicio">
-      <div class="form-group">
-        <label for="nuevaDescripcion">Nueva descripción:</label>
-        <textarea id="nuevaDescripcion" name="descripcion" required></textarea>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="close-btn" onclick="cerrarModalEditar()">Cancelar</button>
-        <button type="submit" class="submit-btn">Guardar cambios</button>
-      </div>
-    </form>
-  </div>
-</div>
+    <!-- Modal Editar Servicio -->
+    <div id="editarModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="cerrarModalEditar()">×</span>
+            <h3>Editar Descripción del Servicio</h3>
+            <form id="editarForm">
+                <input type="hidden" id="editarIdServicio" name="id_servicio">
+                <div class="form-group">
+                    <label for="nuevaDescripcion">Nueva descripción:</label>
+                    <textarea id="nuevaDescripcion" name="descripcion" required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="close-btn" onclick="cerrarModalEditar()">Cancelar</button>
+                    <button type="submit" class="submit-btn">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-<!-- Modal de Chat -->
-<div id="chatModal" class="modal">
-  <div class="modal-content chat-modal">
-    <span class="close-btn" onclick="cerrarChatModal()">×</span>
-    <h3 class="chat-title">💬 Chat con Administrador</h3>
-    <div id="chatMensajes" class="chat-mensajes"></div>
-    <form id="formChat" class="chat-form">
-      <input type="hidden" id="chatIdServicio">
-      <div class="chat-input-container">
-        <textarea id="mensajeChat" placeholder="Escribe tu mensaje..." required></textarea>
-        <button type="submit" class="submit-btn">Enviar</button>
-      </div>
-    </form>
-  </div>
-</div>
+    <!-- Modal de Chat -->
+    <div id="chatModal" class="modal">
+        <div class="modal-content chat-modal">
+            <span class="close-btn" onclick="cerrarChatModal()">×</span>
+            <h3 class="chat-title">💬 Chat con Administrador</h3>
+            <div id="chatMensajes" class="chat-mensajes"></div>
+            <form id="formChat" class="chat-form">
+                <input type="hidden" id="chatIdServicio">
+                <div class="chat-input-container">
+                    <textarea id="mensajeChat" placeholder="Escribe tu mensaje..." required></textarea>
+                    <button type="submit" class="submit-btn">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
- <script src="./js/cliente.js"></script>
+    <script src="./js/cliente.js"></script>
 
 </body>
 
