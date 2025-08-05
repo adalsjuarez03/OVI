@@ -79,6 +79,7 @@ document.getElementById("nuevaSolicitudBtn").addEventListener("click", () => {
             modal.style.display = "block";
         });
 });
+   document.getElementById("cerrarModal").addEventListener("click", () => modal.style.display = "none");
 
 
     window.addEventListener("click", function (event) {
