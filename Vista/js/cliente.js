@@ -64,8 +64,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Modal nueva solicitud
     const modal = document.getElementById("nuevaSolicitudModal");
-    document.getElementById("nuevaSolicitudBtn").addEventListener("click", () => modal.style.display = "block");
-    document.getElementById("cerrarModal").addEventListener("click", () => modal.style.display = "none");
+const idSpan = document.getElementById("idServicio"); // span donde se mostrará el ID
+
+document.getElementById("nuevaSolicitudBtn").addEventListener("click", () => {
+    fetch("ajax/obtener_siguiente_id.php") 
+        .then(response => response.text())
+        .then(data => {
+            idSpan.textContent = data;
+            modal.style.display = "block";
+        })
+        .catch(error => {
+            console.error("Error al obtener el ID:", error);
+            idSpan.textContent = "??";
+            modal.style.display = "block";
+        });
+});
+
 
     window.addEventListener("click", function (event) {
         if (event.target == modal) {
