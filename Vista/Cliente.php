@@ -195,7 +195,7 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
             <form id="solicitudForm" enctype="multipart/form-data">
                 <div class="modal-header">
                     <div>
-                        <div class="form-title">SEyT-SISNE-OVIO-<span id="idServicio"></span></div>
+                        <div class="form-title">SEyT-SISNE-OVI-<span id="idServicio"></span></div>
                         <div class="form-subtitle">SECRETARIA DE ECONOMÍA Y TRABAJO<br>UNIDAD DE INFORMÁTICA<br>ÁREA DE SOPORTE TÉCNICO</div>
                     </div>
                     <img src="https://ovi.economiaytrabajo.chiapas.gob.mx/static/LOGO.png" alt="Logo">
