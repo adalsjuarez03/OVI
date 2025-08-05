@@ -155,7 +155,7 @@ while ($consulta->fetch()) {
 
       <div class="info-group">
         <span class="info-label"><strong>📝 Descripción:</strong></span>
-        <div class="descripcion-detalle" id="detalleDescripcion"></div>
+        <div class="descripcion-detalle" id="detalleDescripcion" style="max-height: 300px; overflow-y: auto; white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
       </div>
     </div>
 
