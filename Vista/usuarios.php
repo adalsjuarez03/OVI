@@ -109,7 +109,10 @@ $resultado = $conn->query("SELECT * FROM usuarios");
                 <td><?= $row['rol'] ?></td>
                 <td>
                     <div class="acciones">
-                        <button class="descargar"><i class="fas fa-download"></i></button>
+                        <a class="descargar" href="generar_pdf.php?id=<?= $row['id_usuario'] ?>" target="_blank">
+    <i class="fas fa-download"></i>
+</a>
+
                         <button class="editar" onclick='abrirEditar(<?= json_encode($row) ?>)'><i class="fas fa-pen"></i></button>
                         <button class="eliminar" onclick='abrirEliminar(<?= $row["id_usuario"] ?>)'><i class="fas fa-trash"></i></button>
                     </div>
