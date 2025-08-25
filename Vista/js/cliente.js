@@ -425,3 +425,88 @@ function editarDescripcion(elemento) {
         alert('Ocurrió un error al obtener la descripción');
     });
 }
+
+ // JavaScript para manejar la funcionalidad de subida de archivos
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileUploadLabel = document.getElementById('fileUploadLabel');
+            const fileUploadContainer = document.getElementById('fileUploadContainer');
+            const browseFilesBtn = document.getElementById('browseFilesBtn');
+            const fileInput = document.getElementById('archivo');
+            const fileList = document.getElementById('fileList');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Mostrar el contenedor de carga al hacer clic en el label
+            fileUploadLabel.addEventListener('click', function(e) {
+                e.preventDefault();
+                fileUploadContainer.classList.add('active');
+            });
+            
+            // Permitir hacer clic en el botón de "Seleccionar archivos"
+            browseFilesBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // Manejar la selección de archivos
+            fileInput.addEventListener('change', function(e) {
+                handleFiles(e.target.files);
+            });
+            
+            // Funcionalidad de arrastrar y soltar
+            fileUploadContainer.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                fileUploadContainer.classList.add('drag-over');
+            });
+            
+            fileUploadContainer.addEventListener('dragleave', function() {
+                fileUploadContainer.classList.remove('drag-over');
+            });
+            
+            fileUploadContainer.addEventListener('drop', function(e) {
+                e.preventDefault();
+                fileUploadContainer.classList.remove('drag-over');
+                
+                if (e.dataTransfer.files.length) {
+                    handleFiles(e.dataTransfer.files);
+                    // También actualizamos el input file original
+                    fileInput.files = e.dataTransfer.files;
+                }
+            });
+            
+            // Función para manejar los archivos seleccionados
+            function handleFiles(files) {
+                fileList.innerHTML = '';
+                
+                if (files.length > 0) {
+                    successMessage.style.display = 'block';
+                    
+                    // Mostrar cada archivo en la lista
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'file-item';
+                        
+                        const fileName = document.createElement('span');
+                        fileName.className = 'file-name';
+                        fileName.textContent = file.name;
+                        
+                        const fileRemove = document.createElement('span');
+                        fileRemove.className = 'file-remove';
+                        fileRemove.textContent = 'X';
+                        fileRemove.addEventListener('click', function() {
+                            fileItem.remove();
+                            // Limpiar el input file
+                            fileInput.value = '';
+                            if (fileList.children.length === 0) {
+                                successMessage.style.display = 'none';
+                            }
+                        });
+                        
+                        fileItem.appendChild(fileName);
+                        fileItem.appendChild(fileRemove);
+                        fileList.appendChild(fileItem);
+                    }
+                } else {
+                    successMessage.style.display = 'none';
+                }
+            }
+        });

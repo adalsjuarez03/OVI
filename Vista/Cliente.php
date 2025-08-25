@@ -190,36 +190,51 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
     </div>
 
     <!-- Modal Nueva Solicitud -->
-    <div id="nuevaSolicitudModal" class="modal">
-        <div class="modal-content">
-            <form id="solicitudForm" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <div>
-                        <div class="form-title">SEyT-SISNE-OVI-<span id="idServicio"></span></div>
-                        <div class="form-subtitle">SECRETARIA DE ECONOMÍA Y TRABAJO<br>UNIDAD DE INFORMÁTICA<br>ÁREA DE SOPORTE TÉCNICO</div>
+  <div id="nuevaSolicitudModal" class="modal">
+            <div class="modal-content">
+                <form id="solicitudForm" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <div>
+                            <div class="form-title">SEyT-SISNE-OVI-<span id="idServicio"></span></div>
+                            <div class="form-subtitle">SECRETARIA DE ECONOMÍA Y TRABAJO<br>UNIDAD DE INFORMÁTICA<br>ÁREA DE SOPORTE TÉCNICO</div>
+                        </div>
+                        <img src="https://ovi.economiaytrabajo.chiapas.gob.mx/static/LOGO.png" alt="Logo">
                     </div>
-                    <img src="https://ovi.economiaytrabajo.chiapas.gob.mx/static/LOGO.png" alt="Logo">
-                </div>
 
-                <div class="form-group">
-                    <label for="descripcion">Descripción de servicio solicitado</label>
-                    <p>Por favor, de una descripción de su problema</p>
-                    <textarea id="descripcion" name="descripcion" required></textarea>
-                </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripción de servicio solicitado</label>
+                        <p>Por favor, de una descripción de su problema</p>
+                        <textarea id="descripcion" name="descripcion" required></textarea>
+                    </div>
 
-                <div class="file-upload">
-                    <input type="file" id="archivo" name="archivo">
-                    <label for="archivo">Pulse aquí para subir un archivo</label>
-                    <span id="fileName" class="file-name"></span>
-                </div>
+                    <div class="file-upload">
+                        <input type="file" id="archivo" name="archivo" style="display: none;">
+                        <label for="archivo" id="fileUploadLabel">Pulse aquí para subir un archivo</label>
+                        <span id="fileName" class="file-name"></span>
+                    </div>
+                    
+                    <!-- Contenedor para arrastrar y soltar archivos -->
+                    <div class="file-upload-container" id="fileUploadContainer">
+                        <div class="upload-icon">📁</div>
+                        <p class="upload-text">Arrastra tus archivos aquí</p>
+                        <p>o</p>
+                        
+                        <button type="button" class="browse-files-btn" id="browseFilesBtn">Seleccionar archivos</button>
+                        
+                        <p class="file-info">Formatos admitidos: PDF, JPG, PNG, DOCX (Máx. 10MB)</p>
+                        
+                        <div class="file-list" id="fileList"></div>
+                        
+                        <p class="success-message" id="successMessage">¡Archivo(s) seleccionado(s) con éxito!</p>
+                    </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="close-btn" id="cerrarModal">Cerrar</button>
-                    <button type="submit" class="submit-btn">Enviar</button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="close-btn" id="cerrarModal">Cerrar</button>
+                        <button type="submit" class="submit-btn">Enviar</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
 
     <!-- Modal de detalle -->
     <div id="detalleModal" class="modal">
