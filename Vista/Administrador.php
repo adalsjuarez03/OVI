@@ -86,14 +86,28 @@ while ($consulta->fetch()) {
         <h2>Servicios solicitados <?php echo strtoupper(htmlspecialchars($nombreAdministrador)); ?></h2>
         <div class="actions">
           <button class="btn new" id="nuevaSolicitudBtn">+ Nueva solicitud</button>
-          <button class="btn filter">Filtros</button>
+          <div class="dropdown-filtro">
+  <button class="btn filter" onclick="toggleFiltroMenu()">🎯 Filtros</button>
+  <ul class="filtro-menu" id="filtroMenu">
+    <li onclick="filtrarColumna('todas')">🔄 Mostrar todas</li>
+    <li onclick="filtrarColumna('no-asignado')">🕓 No asignado</li>
+    <li onclick="filtrarColumna('asignado')">🛠 Asignado</li>
+    <li onclick="filtrarColumna('concluido')">✅ Concluido / ❌ Cancelado</li>
+  </ul>
+</div>
+
         </div>
       </div>
 
       <!-- Kanban -->
       <div class="kanban-container">
         <?php foreach ($servicios as $servicio): ?>
-          <div class="kanban-card <?php echo strtolower($servicio['Estatus']); ?>" id="servicio-<?php echo $servicio['Id_servicio']; ?>" draggable="true" ondragstart="drag(event)">
+         <div class="kanban-card <?php echo strtolower($servicio['Estatus']); ?>" 
+     data-status="<?php echo strtolower($servicio['Estatus']); ?>"
+     id="servicio-<?php echo $servicio['Id_servicio']; ?>" 
+     draggable="true" 
+     ondragstart="drag(event)">
+
             <div class="card-header">
               <div class="left">
                 <span class="badge <?php echo strtolower($servicio['Estatus']); ?>">
@@ -127,6 +141,38 @@ while ($consulta->fetch()) {
       </div>
     </section>
   </main>
+</div>
+
+<!-- Modal Nueva Solicitud -->
+<div id="nuevaSolicitudModal" class="modal">
+  <div class="modal-content">
+    <form id="solicitudForm" enctype="multipart/form-data">
+      <div class="modal-header">
+        <div>
+          <div class="form-title">SEyT-SISNE-OVI-<span id="idServicio"></span></div>
+          <div class="form-subtitle">SECRETARIA DE ECONOMÍA Y TRABAJO<br>UNIDAD DE INFORMÁTICA<br>ÁREA DE SOPORTE TÉCNICO</div>
+        </div>
+        <img src="https://ovi.economiaytrabajo.chiapas.gob.mx/static/LOGO.png" alt="Logo">
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion">Descripción de servicio solicitado</label>
+        <p>Por favor, de una descripción de su problema</p>
+        <textarea id="descripcion" name="descripcion" required></textarea>
+      </div>
+
+      <div class="file-upload">
+        <input type="file" id="archivo" name="archivo">
+        <label for="archivo">Pulse aquí para subir un archivo</label>
+        <span id="fileName" class="file-name"></span>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="close-btn" id="cerrarModal">Cerrar</button>
+        <button type="submit" class="submit-btn">Enviar</button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <!-- Modal Detalle -->

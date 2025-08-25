@@ -213,6 +213,7 @@ async function cargarMensajes(idServicio) {
 
   contenedor.scrollTop = contenedor.scrollHeight;
 }
+
 function concluirServicio(idServicio) {
   if (!confirm("¿Estás seguro de marcar este servicio como CONCLUIDO?")) return;
 
@@ -228,11 +229,9 @@ function concluirServicio(idServicio) {
       if (data.success) {
         const card = document.getElementById('servicio-' + idServicio);
 
-        // Cambiar visualmente la tarjeta
         card.classList.remove('no-asignado', 'asignado');
         card.classList.add('concluido');
 
-        // Cambiar texto del badge
         const badge = card.querySelector('.badge');
         badge.textContent = 'CONCLUIDO';
         badge.className = 'badge concluido';
@@ -246,4 +245,50 @@ function concluirServicio(idServicio) {
       console.error(err);
       alert('Error al conectar con el servidor.');
     });
+}
+
+// ========== MENÚ DE FILTROS ==========
+function toggleFiltroMenu() {
+  const menu = document.getElementById("filtroMenu");
+  if (menu) {
+    menu.style.display = (menu.style.display === "block") ? "none" : "block";
+  }
+}
+
+// Cerrar el menú si se hace clic afuera
+window.addEventListener("click", function(e) {
+  const menu = document.getElementById("filtroMenu");
+  const filtroBtn = document.querySelector(".btn.filter");
+  if (menu && filtroBtn && !filtroBtn.contains(e.target) && !menu.contains(e.target)) {
+    menu.style.display = "none";
+  }
+});
+
+// FILTRO DE TARJETAS
+function filtrarColumna(tipo) {
+  const tarjetas = document.querySelectorAll('.kanban-card');
+
+  tarjetas.forEach(card => {
+    const estatus = card.getAttribute('data-status').toLowerCase();
+
+    switch(tipo) {
+      case 'todas':
+        card.style.display = 'block';
+        break;
+      case 'no-asignado':
+        card.style.display = (estatus === 'no asignado' || estatus === 'no-asignado') ? 'block' : 'none';
+        break;
+      case 'asignado':
+        card.style.display = (estatus === 'asignado') ? 'block' : 'none';
+        break;
+      case 'concluido':
+        card.style.display = (estatus === 'concluido' || estatus === 'cancelado') ? 'block' : 'none';
+        break;
+      default:
+        card.style.display = 'block';
+    }
+  });
+
+  const menu = document.getElementById("filtroMenu");
+  if (menu) menu.style.display = 'none';
 }
