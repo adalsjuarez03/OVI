@@ -101,46 +101,51 @@ while ($consulta->fetch()) {
         </div>
 
         <!-- Kanban -->
-        <div class="kanban-container">
-          <?php foreach ($servicios as $servicio): ?>
-            <div class="kanban-card <?php echo strtolower($servicio['Estatus']); ?>"
-              data-status="<?php echo strtolower($servicio['Estatus']); ?>"
-              id="servicio-<?php echo $servicio['Id_servicio']; ?>"
-              draggable="true"
-              ondragstart="drag(event)">
+        <!-- Kanban -->
+<div class="kanban-container">
+  <?php foreach ($servicios as $servicio): ?>
+    <div class="kanban-card <?php echo strtolower($servicio['Estatus']); ?>"
+      data-status="<?php echo strtolower($servicio['Estatus']); ?>"
+      id="servicio-<?php echo $servicio['Id_servicio']; ?>"
+      draggable="true"
+      ondragstart="drag(event)">
 
-              <div class="card-header">
-                <div class="left">
-                  <span class="badge <?php echo strtolower($servicio['Estatus']); ?>">
-                    <?php echo strtoupper($servicio['Estatus']); ?>
-                  </span>
-                  <small class="created">📅 <?php echo date("d/m/Y", strtotime($servicio['Fecha_solicitud'])); ?></small>
-                </div>
-                <span class="dots" onclick="toggleMenu(this)">⋮</span>
-                <ul class="dropdown">
-                  <li onclick="verDetalle(<?php echo $servicio['Id_servicio']; ?>)">👁 Ver</li>
-                  <?php if (strtolower($servicio['Estatus']) !== 'concluido' && strtolower($servicio['Estatus']) !== 'cancelado'): ?>
-                    <li onclick="asignarServicio(<?php echo $servicio['Id_servicio']; ?>)">✅ Asignar</li>
-                    <li onclick="concluirServicio(<?php echo $servicio['Id_servicio']; ?>)">✔️ Concluir</li>
-                  <?php endif; ?>
-                </ul>
-              </div>
-              <div class="card-body">
-                <div class="tags">
-                  <span class="tag">#<?php echo htmlspecialchars($servicio['Numero_servicio']); ?></span>
-                </div>
-                <!-- ✅ Mostrar Titulo como encabezado -->
-                <h4 class="titulo-servicio"><?php echo htmlspecialchars($servicio['Titulo']); ?></h4>
-                <p class="descripcion"><?php echo htmlspecialchars(mb_strimwidth($servicio['Descripcion'], 0, 100, '...')); ?></p>
-              </div>
-
-              <div class="kanban-footer">
-                <div class="asignado"><?php echo htmlspecialchars($servicio['Turnado']); ?></div>
-                <button class="btn chat">💬</button>
-              </div>
-            </div>
-          <?php endforeach; ?>
+      <div class="card-header">
+        <div class="left">
+          <span class="badge <?php echo strtolower($servicio['Estatus']); ?>">
+            <?php echo strtoupper($servicio['Estatus']); ?>
+          </span>
+          <small class="created">📅 <?php echo date("d/m/Y", strtotime($servicio['Fecha_solicitud'])); ?></small>
         </div>
+        <span class="dots" onclick="toggleMenu(this)">⋮</span>
+        <ul class="dropdown">
+          <li onclick="verDetalle(<?php echo $servicio['Id_servicio']; ?>)">👁 Ver</li>
+
+          <?php if (strtolower($servicio['Estatus']) === 'no-asignado'): ?>
+            <li onclick="asignarServicio(<?php echo $servicio['Id_servicio']; ?>)">✅ Asignar</li>
+            <li onclick="concluirServicio(<?php echo $servicio['Id_servicio']; ?>)">✔️ Concluir</li>
+          <?php elseif (strtolower($servicio['Estatus']) === 'asignado'): ?>
+            <li onclick="concluirServicio(<?php echo $servicio['Id_servicio']; ?>)">✔️ Concluir</li>
+          <?php endif; ?>
+        </ul>
+      </div>
+
+      <div class="card-body">
+        <div class="tags">
+          <span class="tag">#<?php echo htmlspecialchars($servicio['Numero_servicio']); ?></span>
+        </div>
+        <h4 class="titulo-servicio"><?php echo htmlspecialchars($servicio['Titulo']); ?></h4>
+        <p class="descripcion"><?php echo htmlspecialchars(mb_strimwidth($servicio['Descripcion'], 0, 100, '...')); ?></p>
+      </div>
+
+      <div class="kanban-footer">
+        <div class="asignado"><?php echo htmlspecialchars($servicio['Turnado']); ?></div>
+        <button class="btn chat">💬</button>
+      </div>
+    </div>
+  <?php endforeach; ?>
+</div>
+
       </section>
     </main>
   </div>
