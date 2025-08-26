@@ -260,26 +260,18 @@ window.addEventListener('click', function(e) {
     }
 });
 
-function filtrarColumna(tipo) {
-    const columnas = {
-        'concluido': document.getElementById('concluido-col'),
-        'asignado': document.getElementById('asignado-col'),
-        'no-asignado': document.getElementById('no-asignado-col'),
-    };
-
-    if (tipo === 'todas') {
-        // Mostrar todas EXCEPTO la columna no-asignado
-        columnas['concluido'].style.display = 'block';
-        columnas['asignado'].style.display = 'block';
-        columnas['no-asignado'].style.display = 'none';
-    } else {
-        // Mostrar solo la columna seleccionada
-        for (let key in columnas) {
-            columnas[key].style.display = (tipo === key) ? 'block' : 'none';
-        }
-    }
-
-    document.getElementById("filtroMenu").style.display = "none";
+function filtrarColumna(tipo) { 
+    const columnas = { 
+        'concluido': document.getElementById('concluido-col'), 
+        'asignado': document.getElementById('asignado-col'), 
+        'no-asignado': document.getElementById('no-asignado-col'), 
+    }; 
+    
+    for (let key in columnas) {
+         columnas[key].style.display = (tipo === 'todas' || tipo === key) ? 
+    'block' : 'none'; 
+ } 
+    document.getElementById("filtroMenu").style.display = "none"; 
 }
 
 

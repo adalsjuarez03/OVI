@@ -273,10 +273,15 @@ function filtrarColumna(tipo) {
 
     switch(tipo) {
       case 'todas':
-        card.style.display = 'block';
+        // Mostrar todas menos "no-asignado"
+        if (estatus === 'no-asignado' || estatus === 'no asignado') {
+          card.style.display = 'none';
+        } else {
+          card.style.display = 'block';
+        }
         break;
       case 'no-asignado':
-        card.style.display = (estatus === 'no asignado' || estatus === 'no-asignado') ? 'block' : 'none';
+        card.style.display = (estatus === 'no-asignado' || estatus === 'no asignado') ? 'block' : 'none';
         break;
       case 'asignado':
         card.style.display = (estatus === 'asignado') ? 'block' : 'none';
@@ -292,3 +297,4 @@ function filtrarColumna(tipo) {
   const menu = document.getElementById("filtroMenu");
   if (menu) menu.style.display = 'none';
 }
+
