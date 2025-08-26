@@ -182,7 +182,7 @@ while ($consulta->fetch()) {
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="close-btn" id="cerrarModal">Cerrar</button>
+          <button type="button" class="submit-btn" id="cerrarModal">Cerrar</button>
           <button type="submit" class="submit-btn">Enviar</button>
         </div>
       </form>
@@ -225,7 +225,7 @@ while ($consulta->fetch()) {
       </div>
 
       <div class="modal-footer">
-        <button class="btn close-btn" onclick="cerrarModalDetalle()">Cerrar</button>
+        <button class="submit-btn" onclick="cerrarModalDetalle()">Cerrar</button>
       </div>
     </div>
   </div>
