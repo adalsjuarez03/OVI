@@ -98,16 +98,40 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const form = document.getElementById("solicitudForm");
-    if (form) {
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        alert("Solicitud enviada con éxito!");
-        modal.style.display = "none";
-        this.reset();
-        const fileName = document.getElementById("fileName");
-        if (fileName) fileName.textContent = "";
+if (form) {
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    fetch("./AJAX/registrar_archivo_admin.php", {
+      method: "POST",
+      body: formData
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert("Solicitud guardada con éxito!");
+
+          // opcional: refrescar página o agregar tarjeta nueva al Kanban sin recargar
+          location.reload();
+        } else {
+          alert("Error: " + data.error);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Error de conexión con el servidor.");
       });
-    }
+
+    // cerrar modal y limpiar
+    document.getElementById("nuevaSolicitudModal").style.display = "none";
+    this.reset();
+    const fileName = document.getElementById("fileName");
+    if (fileName) fileName.textContent = "";
+  });
+}
+
   }
 });
 

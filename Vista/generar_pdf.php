@@ -56,7 +56,7 @@ $pdf->SetFont('Arial', 'B', 12);
 $pdf->Cell(0, 10, $usuario['correo'], 0, 1);
 
 $pdf->SetFont('Arial', '', 12);
-$pdf->Cell(40, 10, 'Teléfono:', 0, 0);
+$pdf->Cell(40, 10, 'Telefono:', 0, 0);
 $pdf->SetFont('Arial', 'B', 12);
 $pdf->Cell(0, 10, $usuario['telefono'], 0, 1);
 
@@ -83,7 +83,7 @@ if (empty($servicios)) {
         // Fondo para cada servicio
         $pdf->SetFillColor(230, 230, 230);
         $pdf->Cell(0, 8, "ID Servicio: " . $s['Id_servicio'], 1, 1, 'L', true);
-        $pdf->MultiCell(0, 7, "Descripción: " . $s['Descripcion'], 1, 'L', true);
+        $pdf->MultiCell(0, 7, "Descripcion: " . $s['Descripcion'], 1, 'L', true);
         $pdf->Cell(0, 8, "Estatus: " . $s['Estatus'], 1, 1, 'L', true);
         $pdf->Ln(5);
     }
