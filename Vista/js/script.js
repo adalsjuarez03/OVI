@@ -213,7 +213,7 @@ async function cargarMensajes(idServicio) {
   contenedor.scrollTop = contenedor.scrollHeight;
 }
 
-// ========== CONCLUIR SERVICIO CON COMENTARIO ==========
+// ========== CONCLUIR SERVICIO CON COMENTARIO (OBLIGATORIO) ==========
 let servicioConcluirId = null;
 
 function concluirServicio(idServicio) {
@@ -226,11 +226,16 @@ function cerrarConcluirModal() {
   document.getElementById("concluirModal").style.display = "none";
 }
 
-// Botón de enviar y concluir
+// Botón de enviar y concluir (comentario obligatorio)
 const enviarConcluirBtn = document.getElementById("enviarConcluirBtn");
 if (enviarConcluirBtn) {
   enviarConcluirBtn.addEventListener("click", function () {
-    const comentario = document.getElementById("comentarioConcluir").value;
+    const comentario = document.getElementById("comentarioConcluir").value.trim();
+
+    if (!comentario) {
+      alert("Por favor, escribe un comentario antes de concluir el servicio.");
+      return; // no permite enviar
+    }
 
     if (!servicioConcluirId) return;
 
@@ -292,7 +297,7 @@ function filtrarColumna(tipo) {
 
     switch(tipo) {
       case 'todas':
-        card.style.display = (estatus === 'no-asignado' || estatus === 'no asignado') ? 'none' : 'block';
+        card.style.display = 'block';
         break;
       case 'no-asignado':
         card.style.display = (estatus === 'no-asignado' || estatus === 'no asignado') ? 'block' : 'none';
