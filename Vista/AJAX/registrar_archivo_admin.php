@@ -2,6 +2,9 @@
 session_start();
 require_once '../../Modelo/Conexion.php'; // Ajusta la ruta si es necesario
 
+// Ajustar zona horaria a México
+date_default_timezone_set('America/Mexico_City');
+
 // Validar si es POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conexion = Conexion::conectar();
@@ -13,20 +16,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // 1. Recibir datos
-    $id_usuario = $_SESSION['usuario']; // ID del admin logueado
-    $descripcion = $_POST['descripcion'];
-    $fecha = date('Y-m-d H:i:s');
+    $id_usuario   = $_SESSION['usuario']; // ID del admin logueado
+    $titulo       = $_POST['titulo'];      // Nuevo campo
+    $descripcion  = $_POST['descripcion'];
+    $fecha        = date('Y-m-d H:i:s');   // Ahora con zona horaria correcta
 
-    // 👇 Diferencia con cliente: aquí va como asignado
+    // Diferencia con cliente: aquí va como asignado
     $estatus = 'asignado';  
     $turnado = $_SESSION['nombre'] . ' ' . $_SESSION['apellido'];
     $acciones = '';
 
-    // 2. Insertar incluyendo id_usuario
-    $sql = "INSERT INTO Servicios (id_usuario, Descripcion, Fecha_solicitud, Estatus, Turnado, Acciones)
-            VALUES (?, ?, ?, ?, ?, ?)";
+    // 2. Insertar incluyendo titulo
+    $sql = "INSERT INTO Servicios (id_usuario, Titulo, Descripcion, Fecha_solicitud, Estatus, Turnado, Acciones)
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("isssss", $id_usuario, $descripcion, $fecha, $estatus, $turnado, $acciones);
+    $stmt->bind_param("issssss", $id_usuario, $titulo, $descripcion, $fecha, $estatus, $turnado, $acciones);
 
     if ($stmt->execute()) {
         // 3. Obtener ID insertado

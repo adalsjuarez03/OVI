@@ -2,6 +2,9 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Ajustar la zona horaria a la de México
+date_default_timezone_set('America/Mexico_City');
+
 require_once '../../Modelo/Conexion.php';
 $conn = Conexion::conectar();
 
@@ -20,7 +23,7 @@ if (isset($_POST['id'])) {
 
         // Traducir estatus a algo más legible
         $estatus_legible = '';
-        switch ($row['Estatus']) {
+        switch (strtolower($row['Estatus'])) {
             case 'asignado':
                 $estatus_legible = 'Asignado';
                 break;
@@ -39,6 +42,7 @@ if (isset($_POST['id'])) {
         $fecha_formateada = date('d/m/Y H:i', strtotime($row['Fecha_solicitud']));
 
         echo json_encode([
+            'Titulo' => $row['Titulo'], // Ahora se incluye el Titulo
             'numero_servicio' => $numero_servicio,
             'estatus' => $estatus_legible,
             'turnado' => $row['Turnado'],

@@ -22,12 +22,11 @@ if ($usuario_id) {
   $nombreAdministrador = 'Usuario';
 }
 
-
-
-$consulta = $conexion->prepare("SELECT Id_servicio, Estatus, Numero_servicio, Descripcion, Turnado, Fecha_solicitud FROM Servicios ORDER BY Fecha_solicitud DESC");
+// ✅ Traer también el campo Titulo
+$consulta = $conexion->prepare("SELECT Id_servicio, Estatus, Numero_servicio, Titulo, Descripcion, Turnado, Fecha_solicitud FROM Servicios ORDER BY Fecha_solicitud DESC");
 $consulta->execute();
 $consulta->store_result();
-$consulta->bind_result($id, $estatus, $numero, $descripcion, $turnado, $fecha);
+$consulta->bind_result($id, $estatus, $numero, $titulo, $descripcion, $turnado, $fecha);
 $servicios = [];
 
 while ($consulta->fetch()) {
@@ -35,6 +34,7 @@ while ($consulta->fetch()) {
     'Id_servicio' => $id,
     'Estatus' => $estatus,
     'Numero_servicio' => $numero,
+    'Titulo' => $titulo,
     'Descripcion' => $descripcion,
     'Turnado' => $turnado,
     'Fecha_solicitud' => $fecha
@@ -97,7 +97,6 @@ while ($consulta->fetch()) {
                 <li onclick="filtrarColumna('concluido')">✅ Concluido / ❌ Cancelado</li>
               </ul>
             </div>
-
           </div>
         </div>
 
@@ -130,7 +129,8 @@ while ($consulta->fetch()) {
                 <div class="tags">
                   <span class="tag">#<?php echo htmlspecialchars($servicio['Numero_servicio']); ?></span>
                 </div>
-                <h4 class="titulo-servicio"><?php echo htmlspecialchars($servicio['Numero_servicio']); ?></h4>
+                <!-- ✅ Mostrar Titulo como encabezado -->
+                <h4 class="titulo-servicio"><?php echo htmlspecialchars($servicio['Titulo']); ?></h4>
                 <p class="descripcion"><?php echo htmlspecialchars(mb_strimwidth($servicio['Descripcion'], 0, 100, '...')); ?></p>
               </div>
 
@@ -157,6 +157,14 @@ while ($consulta->fetch()) {
           <img src="https://ovi.economiaytrabajo.chiapas.gob.mx/static/LOGO.png" alt="Logo">
         </div>
 
+        <!-- ✅ Nuevo campo Titulo -->
+        <div class="form-group">
+          <label for="titulo">Título del servicio solicitado</label>
+          <p>Escriba un título breve y claro para identificar la solicitud</p>
+          <input type="text" id="titulo" name="titulo" required>
+        </div>
+
+        <!-- Campo existente de Descripción -->
         <div class="form-group">
           <label for="descripcion">Descripción de servicio solicitado</label>
           <p>Por favor, de una descripción de su problema</p>
@@ -182,6 +190,7 @@ while ($consulta->fetch()) {
     <div class="modal-content">
       <span class="close-btn" onclick="cerrarModalDetalle()">×</span>
       <div class="modal-header">
+        <!-- ✅ Ahora se mostrará el Titulo -->
         <h2 id="detalleTitulo" class="titulo-modal"></h2>
       </div>
 

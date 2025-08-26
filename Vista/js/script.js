@@ -74,18 +74,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const closeBtn = document.getElementById("cerrarModal");
 
   if (modal && btn && closeBtn) {
-    btn.addEventListener("click", () => {
-      modal.style.display = "block";
-    });
-
-    closeBtn.addEventListener("click", () => {
-      modal.style.display = "none";
-    });
+    btn.addEventListener("click", () => { modal.style.display = "block"; });
+    closeBtn.addEventListener("click", () => { modal.style.display = "none"; });
 
     window.addEventListener("click", function (event) {
-      if (event.target === modal) {
-        modal.style.display = "none";
-      }
+      if (event.target === modal) modal.style.display = "none";
     });
 
     const fileInput = document.getElementById("archivo");
@@ -98,40 +91,34 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const form = document.getElementById("solicitudForm");
-if (form) {
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
+    if (form) {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
 
-    const formData = new FormData(this);
+        fetch("./AJAX/registrar_archivo_admin.php", {
+          method: "POST",
+          body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert("Solicitud guardada con éxito!");
+            location.reload();
+          } else {
+            alert("Error: " + data.error);
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Error de conexión con el servidor.");
+        });
 
-    fetch("./AJAX/registrar_archivo_admin.php", {
-      method: "POST",
-      body: formData
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          alert("Solicitud guardada con éxito!");
-
-          // opcional: refrescar página o agregar tarjeta nueva al Kanban sin recargar
-          location.reload();
-        } else {
-          alert("Error: " + data.error);
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        alert("Error de conexión con el servidor.");
+        modal.style.display = "none";
+        this.reset();
+        if (fileName) fileName.textContent = "";
       });
-
-    // cerrar modal y limpiar
-    document.getElementById("nuevaSolicitudModal").style.display = "none";
-    this.reset();
-    const fileName = document.getElementById("fileName");
-    if (fileName) fileName.textContent = "";
-  });
-}
-
+    }
   }
 });
 
@@ -139,26 +126,25 @@ if (form) {
 function verDetalle(idServicio) {
   fetch('./AJAX/getservicio.php', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: 'id=' + encodeURIComponent(idServicio)
   })
-    .then(response => response.json())
-    .then(data => {
-      if (data.error) {
-        alert('Error: ' + data.error);
-        return;
-      }
+  .then(response => response.json())
+  .then(data => {
+    if (data.error) {
+      alert('Error: ' + data.error);
+      return;
+    }
 
-      document.getElementById('detalleTitulo').textContent = data.numero_servicio;
-      document.getElementById('detalleEstatus').textContent = data.estatus;
-      document.getElementById('detalleTurnado').textContent = data.turnado;
-      document.getElementById('detalleFecha').textContent = data.fecha;
-      document.getElementById('detalleDescripcion').textContent = data.descripcion;
+    // Mostrar Título + Número del servicio
+    document.getElementById('detalleTitulo').textContent = `${data.Titulo} (${data.numero_servicio})`;
+    document.getElementById('detalleEstatus').textContent = data.estatus;
+    document.getElementById('detalleTurnado').textContent = data.turnado;
+    document.getElementById('detalleFecha').textContent = data.fecha;
+    document.getElementById('detalleDescripcion').textContent = data.descripcion;
 
-      document.getElementById('detalleModal').style.display = 'block';
-    });
+    document.getElementById('detalleModal').style.display = 'block';
+  });
 }
 
 function cerrarModalDetalle() {
@@ -167,9 +153,7 @@ function cerrarModalDetalle() {
 
 window.addEventListener("click", function (event) {
   const modal = document.getElementById("detalleModal");
-  if (event.target === modal) {
-    modal.style.display = "none";
-  }
+  if (event.target === modal) modal.style.display = "none";
 });
 
 // ========== COLAPSAR SIDEBAR ==========
@@ -238,48 +222,43 @@ async function cargarMensajes(idServicio) {
   contenedor.scrollTop = contenedor.scrollHeight;
 }
 
+// ========== CONCLUIR SERVICIO ==========
 function concluirServicio(idServicio) {
   if (!confirm("¿Estás seguro de marcar este servicio como CONCLUIDO?")) return;
 
   fetch('./AJAX/concluir_servicio.php', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: 'id_servicio=' + encodeURIComponent(idServicio)
   })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        const card = document.getElementById('servicio-' + idServicio);
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      const card = document.getElementById('servicio-' + idServicio);
+      card.classList.remove('no-asignado', 'asignado');
+      card.classList.add('concluido');
 
-        card.classList.remove('no-asignado', 'asignado');
-        card.classList.add('concluido');
+      const badge = card.querySelector('.badge');
+      badge.textContent = 'CONCLUIDO';
+      badge.className = 'badge concluido';
 
-        const badge = card.querySelector('.badge');
-        badge.textContent = 'CONCLUIDO';
-        badge.className = 'badge concluido';
-
-        alert('Servicio marcado como CONCLUIDO');
-      } else {
-        alert('Error al concluir el servicio: ' + data.error);
-      }
-    })
-    .catch(err => {
-      console.error(err);
-      alert('Error al conectar con el servidor.');
-    });
+      alert('Servicio marcado como CONCLUIDO');
+    } else {
+      alert('Error al concluir el servicio: ' + data.error);
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert('Error al conectar con el servidor.');
+  });
 }
 
 // ========== MENÚ DE FILTROS ==========
 function toggleFiltroMenu() {
   const menu = document.getElementById("filtroMenu");
-  if (menu) {
-    menu.style.display = (menu.style.display === "block") ? "none" : "block";
-  }
+  if (menu) menu.style.display = (menu.style.display === "block") ? "none" : "block";
 }
 
-// Cerrar el menú si se hace clic afuera
 window.addEventListener("click", function(e) {
   const menu = document.getElementById("filtroMenu");
   const filtroBtn = document.querySelector(".btn.filter");
@@ -297,12 +276,7 @@ function filtrarColumna(tipo) {
 
     switch(tipo) {
       case 'todas':
-        // Mostrar todas menos "no-asignado"
-        if (estatus === 'no-asignado' || estatus === 'no asignado') {
-          card.style.display = 'none';
-        } else {
-          card.style.display = 'block';
-        }
+        card.style.display = (estatus === 'no-asignado' || estatus === 'no asignado') ? 'none' : 'block';
         break;
       case 'no-asignado':
         card.style.display = (estatus === 'no-asignado' || estatus === 'no asignado') ? 'block' : 'none';
@@ -321,4 +295,3 @@ function filtrarColumna(tipo) {
   const menu = document.getElementById("filtroMenu");
   if (menu) menu.style.display = 'none';
 }
-
