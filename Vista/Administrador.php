@@ -252,7 +252,7 @@ while ($consulta->fetch()) {
       <p>Escribe un comentario o sugerencia antes de concluir el servicio:</p>
       <textarea id="comentarioConcluir" placeholder="Comentario..." style="width: 100%; height: 100px;"></textarea>
       <div class="modal-footer">
-        <button class="btn close-btn" onclick="cerrarConcluirModal()">Cancelar</button>
+        <button class="btn submit-btn" onclick="cerrarConcluirModal()">Cancelar</button>
         <button class="btn submit-btn" id="enviarConcluirBtn">Enviar y Concluir</button>
       </div>
     </div>
