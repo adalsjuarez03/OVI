@@ -962,4 +962,33 @@ body {
   background: #f5f7fa;
   border-radius: 8px;
 }
+/* Estilo para el input del título */
+#titulo {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+}
+
+#titulo:focus {
+  border-color: #007BFF; /* color azul al enfocar */
+  box-shadow: 0 0 5px rgba(0,123,255,0.5);
+  outline: none;
+}
+
+/* Opcional: estilo para el label y el párrafo explicativo */
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.form-group p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
 

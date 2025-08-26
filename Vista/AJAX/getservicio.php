@@ -11,6 +11,7 @@ $conn = Conexion::conectar();
 if (isset($_POST['id'])) {
     $id = intval($_POST['id']);
 
+    // Seleccionamos también Comentario_conclusion
     $stmt = $conn->prepare("SELECT * FROM Servicios WHERE Id_servicio = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
@@ -47,7 +48,8 @@ if (isset($_POST['id'])) {
             'estatus' => $estatus_legible,
             'turnado' => $row['Turnado'],
             'fecha' => $fecha_formateada,
-            'descripcion' => $row['Descripcion']
+            'descripcion' => $row['Descripcion'],
+            'comentario' => $row['Comentario_conclusion'] // <-- agregado
         ]);
     } else {
         echo json_encode(['error' => 'Servicio no encontrado']);
@@ -55,3 +57,4 @@ if (isset($_POST['id'])) {
 } else {
     echo json_encode(['error' => 'ID no recibido']);
 }
+?>

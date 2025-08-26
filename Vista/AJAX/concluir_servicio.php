@@ -8,10 +8,12 @@ if (!isset($_POST['id_servicio'])) {
 }
 
 $id = intval($_POST['id_servicio']);
+$comentario = $_POST['comentario'] ?? ''; // Recibir comentario
 $nuevo_estatus = 'concluido';
 
-$stmt = $conexion->prepare("UPDATE Servicios SET Estatus = ? WHERE Id_servicio = ?");
-$stmt->bind_param("si", $nuevo_estatus, $id);
+// Actualizar estatus y guardar comentario
+$stmt = $conexion->prepare("UPDATE Servicios SET Estatus = ?, Comentario_conclusion = ? WHERE Id_servicio = ?");
+$stmt->bind_param("ssi", $nuevo_estatus, $comentario, $id);
 
 if ($stmt->execute()) {
     echo json_encode(['success' => true]);

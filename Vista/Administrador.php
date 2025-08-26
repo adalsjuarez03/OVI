@@ -22,11 +22,16 @@ if ($usuario_id) {
   $nombreAdministrador = 'Usuario';
 }
 
-// ✅ Traer también el campo Titulo
-$consulta = $conexion->prepare("SELECT Id_servicio, Estatus, Numero_servicio, Titulo, Descripcion, Turnado, Fecha_solicitud FROM Servicios ORDER BY Fecha_solicitud DESC");
+// Consulta incluyendo el comentario del administrador
+$consulta = $conexion->prepare("
+    SELECT Id_servicio, Estatus, Numero_servicio, Titulo, Descripcion, Turnado, Fecha_solicitud, Comentario_conclusion 
+    FROM Servicios 
+    ORDER BY Fecha_solicitud DESC
+");
 $consulta->execute();
 $consulta->store_result();
-$consulta->bind_result($id, $estatus, $numero, $titulo, $descripcion, $turnado, $fecha);
+$consulta->bind_result($id, $estatus, $numero, $titulo, $descripcion, $turnado, $fecha, $comentario);
+
 $servicios = [];
 
 while ($consulta->fetch()) {
@@ -37,22 +42,20 @@ while ($consulta->fetch()) {
     'Titulo' => $titulo,
     'Descripcion' => $descripcion,
     'Turnado' => $turnado,
-    'Fecha_solicitud' => $fecha
+    'Fecha_solicitud' => $fecha,
+    'Comentario' => $comentario // agregado
   ];
 }
-
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <title>Panel Administrador</title>
   <link rel="stylesheet" href="./CSS/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
-
 <body>
   <div class="layout">
     <aside class="sidebar" id="sidebar">
@@ -100,51 +103,49 @@ while ($consulta->fetch()) {
           </div>
         </div>
 
-        <!-- Kanban -->
-        <!-- Kanban -->
-<div class="kanban-container">
-  <?php foreach ($servicios as $servicio): ?>
-    <div class="kanban-card <?php echo strtolower($servicio['Estatus']); ?>"
-      data-status="<?php echo strtolower($servicio['Estatus']); ?>"
-      id="servicio-<?php echo $servicio['Id_servicio']; ?>"
-      draggable="true"
-      ondragstart="drag(event)">
+        <div class="kanban-container">
+          <?php foreach ($servicios as $servicio): ?>
+            <div class="kanban-card <?php echo strtolower($servicio['Estatus']); ?>"
+              data-status="<?php echo strtolower($servicio['Estatus']); ?>"
+              id="servicio-<?php echo $servicio['Id_servicio']; ?>"
+              draggable="true"
+              ondragstart="drag(event)">
+              
+              <div class="card-header">
+                <div class="left">
+                  <span class="badge <?php echo strtolower($servicio['Estatus']); ?>">
+                    <?php echo strtoupper($servicio['Estatus']); ?>
+                  </span>
+                  <small class="created">📅 <?php echo date("d/m/Y", strtotime($servicio['Fecha_solicitud'])); ?></small>
+                </div>
+                <span class="dots" onclick="toggleMenu(this)">⋮</span>
+                <ul class="dropdown">
+                  <li onclick="verDetalle(<?php echo $servicio['Id_servicio']; ?>)">👁 Ver</li>
 
-      <div class="card-header">
-        <div class="left">
-          <span class="badge <?php echo strtolower($servicio['Estatus']); ?>">
-            <?php echo strtoupper($servicio['Estatus']); ?>
-          </span>
-          <small class="created">📅 <?php echo date("d/m/Y", strtotime($servicio['Fecha_solicitud'])); ?></small>
+                  <?php if (strtolower($servicio['Estatus']) === 'no-asignado'): ?>
+                    <li onclick="asignarServicio(<?php echo $servicio['Id_servicio']; ?>)">✅ Asignar</li>
+                    <li onclick="concluirServicio(<?php echo $servicio['Id_servicio']; ?>)">✔️ Concluir</li>
+                  <?php elseif (strtolower($servicio['Estatus']) === 'asignado'): ?>
+                    <li onclick="concluirServicio(<?php echo $servicio['Id_servicio']; ?>)">✔️ Concluir</li>
+                  <?php endif; ?>
+                </ul>
+              </div>
+
+              <div class="card-body">
+                <div class="tags">
+                  <span class="tag">#<?php echo htmlspecialchars($servicio['Numero_servicio']); ?></span>
+                </div>
+                <h4 class="titulo-servicio"><?php echo htmlspecialchars($servicio['Titulo']); ?></h4>
+                <p class="descripcion"><?php echo htmlspecialchars(mb_strimwidth($servicio['Descripcion'], 0, 100, '...')); ?></p>
+              </div>
+
+              <div class="kanban-footer">
+                <div class="asignado"><?php echo htmlspecialchars($servicio['Turnado']); ?></div>
+                <button class="btn chat">💬</button>
+              </div>
+            </div>
+          <?php endforeach; ?>
         </div>
-        <span class="dots" onclick="toggleMenu(this)">⋮</span>
-        <ul class="dropdown">
-          <li onclick="verDetalle(<?php echo $servicio['Id_servicio']; ?>)">👁 Ver</li>
-
-          <?php if (strtolower($servicio['Estatus']) === 'no-asignado'): ?>
-            <li onclick="asignarServicio(<?php echo $servicio['Id_servicio']; ?>)">✅ Asignar</li>
-            <li onclick="concluirServicio(<?php echo $servicio['Id_servicio']; ?>)">✔️ Concluir</li>
-          <?php elseif (strtolower($servicio['Estatus']) === 'asignado'): ?>
-            <li onclick="concluirServicio(<?php echo $servicio['Id_servicio']; ?>)">✔️ Concluir</li>
-          <?php endif; ?>
-        </ul>
-      </div>
-
-      <div class="card-body">
-        <div class="tags">
-          <span class="tag">#<?php echo htmlspecialchars($servicio['Numero_servicio']); ?></span>
-        </div>
-        <h4 class="titulo-servicio"><?php echo htmlspecialchars($servicio['Titulo']); ?></h4>
-        <p class="descripcion"><?php echo htmlspecialchars(mb_strimwidth($servicio['Descripcion'], 0, 100, '...')); ?></p>
-      </div>
-
-      <div class="kanban-footer">
-        <div class="asignado"><?php echo htmlspecialchars($servicio['Turnado']); ?></div>
-        <button class="btn chat">💬</button>
-      </div>
-    </div>
-  <?php endforeach; ?>
-</div>
 
       </section>
     </main>
@@ -162,14 +163,12 @@ while ($consulta->fetch()) {
           <img src="https://ovi.economiaytrabajo.chiapas.gob.mx/static/LOGO.png" alt="Logo">
         </div>
 
-        <!-- ✅ Nuevo campo Titulo -->
         <div class="form-group">
           <label for="titulo">Título del servicio solicitado</label>
           <p>Escriba un título breve y claro para identificar la solicitud</p>
           <input type="text" id="titulo" name="titulo" required>
         </div>
 
-        <!-- Campo existente de Descripción -->
         <div class="form-group">
           <label for="descripcion">Descripción de servicio solicitado</label>
           <p>Por favor, de una descripción de su problema</p>
@@ -195,7 +194,6 @@ while ($consulta->fetch()) {
     <div class="modal-content">
       <span class="close-btn" onclick="cerrarModalDetalle()">×</span>
       <div class="modal-header">
-        <!-- ✅ Ahora se mostrará el Titulo -->
         <h2 id="detalleTitulo" class="titulo-modal"></h2>
       </div>
 
@@ -211,20 +209,25 @@ while ($consulta->fetch()) {
         </div>
 
         <div class="info-group">
-        </div><strong>📅 Fecha de solicitud:</strong></span>
-        <span class="info-value" id="detalleFecha"></span>
+          <strong>📅 Fecha de solicitud:</strong>
+          <span class="info-value" id="detalleFecha"></span>
+        </div>
+
+        <div class="info-group">
+          <span class="info-label"><strong>📝 Descripción:</strong></span>
+          <div class="descripcion-detalle" id="detalleDescripcion" style="max-height: 300px; overflow-y: auto; white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
+        </div>
+
+        <div class="info-group">
+          <span class="info-label"><strong>💬 Comentario Admin:</strong></span>
+          <div class="comentario-detalle" id="detalleComentario" style="max-height: 150px; overflow-y: auto; white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
+        </div>
       </div>
 
-      <div class="info-group">
-        <span class="info-label"><strong>📝 Descripción:</strong></span>
-        <div class="descripcion-detalle" id="detalleDescripcion" style="max-height: 300px; overflow-y: auto; white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
+      <div class="modal-footer">
+        <button class="btn close-btn" onclick="cerrarModalDetalle()">Cerrar</button>
       </div>
     </div>
-
-    <div class="modal-footer">
-      <button class="btn close-btn" onclick="cerrarModalDetalle()">Cerrar</button>
-    </div>
-  </div>
   </div>
 
   <!-- Modal de Chat -->
@@ -241,7 +244,20 @@ while ($consulta->fetch()) {
     </div>
   </div>
 
+  <!-- Modal Concluir Servicio -->
+  <div id="concluirModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="cerrarConcluirModal()">×</span>
+      <h3>Concluir Servicio</h3>
+      <p>Escribe un comentario o sugerencia antes de concluir el servicio:</p>
+      <textarea id="comentarioConcluir" placeholder="Comentario..." style="width: 100%; height: 100px;"></textarea>
+      <div class="modal-footer">
+        <button class="btn close-btn" onclick="cerrarConcluirModal()">Cancelar</button>
+        <button class="btn submit-btn" id="enviarConcluirBtn">Enviar y Concluir</button>
+      </div>
+    </div>
+  </div>
+
   <script src="./js/script.js"></script>
 </body>
-
 </html>
