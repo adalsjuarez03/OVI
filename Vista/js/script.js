@@ -316,3 +316,34 @@ function filtrarColumna(tipo) {
   const menu = document.getElementById("filtroMenu");
   if (menu) menu.style.display = 'none';
 }
+
+// ========== ASIGNAR SERVICIO ==========
+function asignarServicio(idServicio) {
+  if (!confirm("¿Deseas asignarte este servicio?")) return;
+
+  fetch("./AJAX/asignar_servicio.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: "id_servicio=" + encodeURIComponent(idServicio)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      const card = document.getElementById("servicio-" + idServicio);
+      card.classList.remove("no-asignado");
+      card.classList.add("asignado");
+
+      const badge = card.querySelector(".badge");
+      badge.textContent = "ASIGNADO";
+      badge.className = "badge asignado";
+
+      alert("Servicio asignado correctamente.");
+    } else {
+      alert("Error al asignar: " + data.error);
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Error de conexión con el servidor.");
+  });
+}

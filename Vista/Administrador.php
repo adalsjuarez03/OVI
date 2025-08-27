@@ -17,17 +17,26 @@ if ($usuario_id) {
   $stmt->fetch();
   $stmt->close();
 
+  // Nombre del admin en mayúsculas
   $nombreAdministrador = strtoupper($nombre . ' ' . $apellido);
 } else {
-  $nombreAdministrador = 'Usuario';
+  $nombreAdministrador = 'USUARIO';
 }
 
-// Consulta incluyendo el comentario del administrador
+/**
+ * ✅ Consulta de servicios corregida:
+ * - Siempre muestra "no-asignado", "concluido", "cancelado"
+ * - Solo muestra "asignado" que correspondan al admin logueado
+ */
 $consulta = $conexion->prepare("
     SELECT Id_servicio, Estatus, Numero_servicio, Titulo, Descripcion, Turnado, Fecha_solicitud, Comentario_conclusion 
     FROM Servicios 
+    WHERE 
+        Estatus IN ('no-asignado', 'concluido', 'cancelado')
+        OR (Estatus = 'asignado' AND Turnado = ?)
     ORDER BY Fecha_solicitud DESC
 ");
+$consulta->bind_param("s", $nombreAdministrador);
 $consulta->execute();
 $consulta->store_result();
 $consulta->bind_result($id, $estatus, $numero, $titulo, $descripcion, $turnado, $fecha, $comentario);
@@ -43,7 +52,7 @@ while ($consulta->fetch()) {
     'Descripcion' => $descripcion,
     'Turnado' => $turnado,
     'Fecha_solicitud' => $fecha,
-    'Comentario' => $comentario // agregado
+    'Comentario' => $comentario
   ];
 }
 ?>
@@ -105,7 +114,7 @@ while ($consulta->fetch()) {
 
         <div class="kanban-container">
           <?php foreach ($servicios as $servicio): ?>
-            <div class="kanban-card <?php echo strtolower($servicio['Estatus']); ?>"
+            <div class="kanban-card <?php echo strtolower($servicio['Estatus']); ?> "
               data-status="<?php echo strtolower($servicio['Estatus']); ?>"
               id="servicio-<?php echo $servicio['Id_servicio']; ?>"
               draggable="true"
@@ -261,4 +270,3 @@ while ($consulta->fetch()) {
   <script src="./js/script.js"></script>
 </body>
 </html>
-  
