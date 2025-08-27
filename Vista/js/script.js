@@ -54,61 +54,141 @@ function dropAtEnd(ev) {
   const container = ev.target.closest(".kanban-container");
   if (container && dragged) container.appendChild(dragged);
 }
-
-// ========== BOTÓN ABRIR NUEVA SOLICITUD ==========
+// ========== BOTÓN ABRIR NUEVA SOLICITUD + SUBIDA DE ARCHIVOS ==========
 document.addEventListener("DOMContentLoaded", function () {
   const modal = document.getElementById("nuevaSolicitudModal");
   const btn = document.getElementById("nuevaSolicitudBtn");
   const closeBtn = document.getElementById("cerrarModal");
+  const fileUploadLabel = document.getElementById('fileUploadLabel');
+  const fileUploadContainer = document.getElementById('fileUploadContainer');
+  const browseFilesBtn = document.getElementById('browseFilesBtn');
+  const fileInput = document.getElementById("archivo");
+  const fileName = document.getElementById("fileName");
+  const fileList = document.getElementById('fileList');
+  const successMessage = document.getElementById('successMessage');
+  const form = document.getElementById("solicitudForm");
 
-  if (modal && btn && closeBtn) {
-    btn.addEventListener("click", () => { modal.style.display = "block"; });
-    closeBtn.addEventListener("click", () => { modal.style.display = "none"; });
+  if (!modal || !btn || !closeBtn || !fileInput) return;
 
-    window.addEventListener("click", function (event) {
-      if (event.target === modal) modal.style.display = "none";
+  // Abrir modal
+  btn.addEventListener("click", () => { modal.style.display = "block"; });
+
+  // Cerrar modal
+  closeBtn.addEventListener("click", () => { modal.style.display = "none"; });
+
+  // Cerrar modal al dar clic fuera
+  window.addEventListener("click", function (event) {
+    if (event.target === modal) modal.style.display = "none";
+  });
+
+  // Mostrar nombre del archivo seleccionado
+  if (fileInput && fileName) {
+    fileInput.addEventListener("change", function () {
+      fileName.textContent = this.files.length > 0 ? this.files[0].name : "";
+      handleFiles(this.files);
+    });
+  }
+
+  // Abrir contenedor al hacer clic en label
+  if (fileUploadLabel && fileUploadContainer) {
+    fileUploadLabel.addEventListener('click', function(e){
+      e.preventDefault();
+      fileUploadContainer.classList.add('active');
+    });
+  }
+
+  // Abrir explorador de archivos desde botón
+  if (browseFilesBtn && fileInput) {
+    browseFilesBtn.addEventListener('click', function(){ fileInput.click(); });
+  }
+
+  // Drag & Drop
+  if (fileUploadContainer) {
+    fileUploadContainer.addEventListener('dragover', function(e){
+      e.preventDefault();
+      fileUploadContainer.classList.add('drag-over');
     });
 
-    const fileInput = document.getElementById("archivo");
-    const fileName = document.getElementById("fileName");
+    fileUploadContainer.addEventListener('dragleave', function(){
+      fileUploadContainer.classList.remove('drag-over');
+    });
 
-    if (fileInput && fileName) {
-      fileInput.addEventListener("change", function () {
-        fileName.textContent = this.files.length > 0 ? this.files[0].name : "";
-      });
-    }
+    fileUploadContainer.addEventListener('drop', function(e){
+      e.preventDefault();
+      fileUploadContainer.classList.remove('drag-over');
+      if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files; // actualizar input
+        handleFiles(e.dataTransfer.files);
+      }
+    });
+  }
 
-    const form = document.getElementById("solicitudForm");
-    if (form) {
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        const formData = new FormData(this);
+  // Función para mostrar archivos en lista
+  function handleFiles(files) {
+    if (!fileList || !successMessage) return;
+    fileList.innerHTML = '';
+    if (files.length > 0) {
+      successMessage.style.display = 'block';
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
 
-        fetch("./AJAX/registrar_archivo_admin.php", {
-          method: "POST",
-          body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            alert("Solicitud guardada con éxito!");
-            location.reload();
-          } else {
-            alert("Error: " + data.error);
-          }
-        })
-        .catch(err => {
-          console.error(err);
-          alert("Error de conexión con el servidor.");
+        const fileNameSpan = document.createElement('span');
+        fileNameSpan.className = 'file-name';
+        fileNameSpan.textContent = file.name;
+
+        const fileRemove = document.createElement('span');
+        fileRemove.className = 'file-remove';
+        fileRemove.textContent = 'X';
+        fileRemove.addEventListener('click', function(){
+          fileItem.remove();
+          fileInput.value = '';
+          if (fileList.children.length === 0) successMessage.style.display = 'none';
         });
 
-        modal.style.display = "none";
-        this.reset();
-        if (fileName) fileName.textContent = "";
-      });
+        fileItem.appendChild(fileNameSpan);
+        fileItem.appendChild(fileRemove);
+        fileList.appendChild(fileItem);
+      }
+    } else {
+      successMessage.style.display = 'none';
     }
   }
+
+  // Enviar formulario
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+
+      fetch("./AJAX/registrar_archivo_admin.php", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert("Solicitud guardada con éxito!");
+          location.reload();
+        } else {
+          alert("Error: " + data.error);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Error de conexión con el servidor.");
+      });
+
+      modal.style.display = "none";
+      this.reset();
+      if (fileName) fileName.textContent = "";
+      if (fileList) fileList.innerHTML = '';
+      if (successMessage) successMessage.style.display = 'none';
+    });
+  }
 });
+
 
 // ========== DETALLE DEL SERVICIO CON COMENTARIO ==========
 function verDetalle(idServicio) {

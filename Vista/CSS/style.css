@@ -992,3 +992,100 @@ body {
   margin-bottom: 8px;
 }
 
+ /* Estilos para la caja de subida de archivos */
+ .file-upload-container {
+            display: none;
+            margin-top: 20px;
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            background-color: #f8fafc;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .file-upload-container.drag-over {
+            background-color: #e1f0fa;
+            border-color: #2980b9;
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .upload-text {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .browse-files-btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: 500;
+            transition: background 0.3s;
+            border: none;
+            font-size: 14px;
+        }
+        
+        .browse-files-btn:hover {
+            background: #2980b9;
+        }
+        
+        .file-info {
+            margin-top: 15px;
+            color: #7f8c8d;
+            font-size: 12px;
+        }
+        
+        .file-list {
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .file-item {
+            background: #edf2f7;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+        
+        .file-name {
+            flex-grow: 1;
+        }
+        
+        .file-remove {
+            color: #e74c3c;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 0 5px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .success-message {
+            color: #27ae60;
+            margin-top: 15px;
+            font-weight: 500;
+            display: none;
+        }

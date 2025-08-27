@@ -64,6 +64,85 @@ while ($consulta->fetch()) {
   <title>Panel Administrador</title>
   <link rel="stylesheet" href="./CSS/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Estilos adicionales para el scroll en todo el modal */
+    .modal-content.scrollable {
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    
+    .file-upload-container {
+      min-height: 150px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 15px;
+      background-color: #f9f9f9;
+    }
+    
+    .file-upload-container.drag-over {
+      border-color: #4CAF50;
+      background-color: #e8f5e9;
+    }
+    
+    .upload-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+    
+    .upload-text {
+      margin: 5px 0;
+      text-align: center;
+    }
+    
+    .browse-files-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 10px 0;
+    }
+    
+    .file-info {
+      font-size: 12px;
+      color: #666;
+      margin: 5px 0;
+    }
+    
+    .file-list {
+      width: 100%;
+      margin-top: 10px;
+    }
+    
+    .file-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      background-color: #f1f1f1;
+      border-radius: 4px;
+      margin-bottom: 5px;
+    }
+    
+    .file-remove {
+      cursor: pointer;
+      color: #f44336;
+      font-weight: bold;
+    }
+    
+    .success-message {
+      color: #4CAF50;
+      font-weight: bold;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
@@ -162,7 +241,7 @@ while ($consulta->fetch()) {
 
   <!-- Modal Nueva Solicitud -->
   <div id="nuevaSolicitudModal" class="modal">
-    <div class="modal-content">
+    <div class="modal-content scrollable">
       <form id="solicitudForm" enctype="multipart/form-data">
         <div class="modal-header">
           <div>
@@ -185,9 +264,24 @@ while ($consulta->fetch()) {
         </div>
 
         <div class="file-upload">
-          <input type="file" id="archivo" name="archivo">
-          <label for="archivo">Pulse aquí para subir un archivo</label>
+          <input type="file" id="archivo" name="archivo" style="display: none;">
+          <label for="archivo" id="fileUploadLabel">Pulse aquí para subir un archivo</label>
           <span id="fileName" class="file-name"></span>
+        </div>
+        
+        <!-- Contenedor para arrastrar y soltar archivos -->
+        <div class="file-upload-container" id="fileUploadContainer">
+          <div class="upload-icon">📁</div>
+          <p class="upload-text">Arrastra tus archivos aquí</p>
+          <p>o</p>
+          
+          <button type="button" class="browse-files-btn" id="browseFilesBtn">Seleccionar archivos</button>
+          
+          <p class="file-info">Formatos admitidos: PDF, JPG, PNG, DOCX (Máx. 10MB)</p>
+          
+          <div class="file-list" id="fileList"></div>
+          
+          <p class="success-message" id="successMessage">¡Archivo(s) seleccionado(s) con éxito!</p>
         </div>
 
         <div class="modal-footer">
@@ -266,7 +360,6 @@ while ($consulta->fetch()) {
       </div>
     </div>
   </div>
-
   <script src="./js/script.js"></script>
 </body>
 </html>
