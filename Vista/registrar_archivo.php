@@ -12,19 +12,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // 1. Recibir datos
+    // 1. Recibir datos (incluyendo el título)
     $id_usuario = $_SESSION['usuario']; // 👈 Nuevo: obtenemos el ID del usuario logueado
+    $titulo = $_POST['titulo']; // NUEVO: recibir el título
     $descripcion = $_POST['descripcion'];
     $fecha = date('Y-m-d H:i:s');
     $estatus = 'no-asignado';
     $turnado = $_SESSION['nombre'] . ' ' . $_SESSION['apellido'];
     $acciones = '';
 
-    // 2. Insertar incluyendo id_usuario
-    $sql = "INSERT INTO Servicios (id_usuario, Descripcion, Fecha_solicitud, Estatus, Turnado, Acciones)
-            VALUES (?, ?, ?, ?, ?, ?)";
+    // 2. Insertar incluyendo id_usuario Y TÍTULO
+    $sql = "INSERT INTO Servicios (id_usuario, Titulo, Descripcion, Fecha_solicitud, Estatus, Turnado, Acciones)
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("isssss", $id_usuario, $descripcion, $fecha, $estatus, $turnado, $acciones);
+    $stmt->bind_param("issssss", $id_usuario, $titulo, $descripcion, $fecha, $estatus, $turnado, $acciones);
 
     if ($stmt->execute()) {
         // 3. Obtener ID insertado

@@ -72,13 +72,10 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 <li onclick="filtrarColumna('no-asignado')">🕓 No asignado</li>
                                 <li onclick="filtrarColumna('asignado')">🛠 Asignado</li>
                                 <li onclick="filtrarColumna('concluido')">✅ Concluido / ❌ Cancelado</li>
-
-
                             </ul>
                         </div>
                     </div>
                 </div>
-
 
                 <div class="kanban-container">
                     <div class="kanban-column" id="concluido-col">
@@ -105,8 +102,8 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '</div>';
                                 echo '<div class="card-body">';
                                 echo '<div class="tags"><span class="tag">#' . htmlspecialchars($row['Numero_servicio']) . '</span></div>';
-                                echo '<h4 class="titulo-servicio">' . substr(htmlspecialchars($row['Descripcion']), 0, 30) . '...</h4>';
-                                echo '<p class="descripcion">' . substr(htmlspecialchars($row['Descripcion']), 0, 60) . '...</p>';
+                                echo '<h4 class="titulo-servicio">' . htmlspecialchars(mb_strimwidth($row['Titulo'], 0, 30, '...')) . '</h4>';
+                                echo '<p class="descripcion">' . htmlspecialchars(mb_strimwidth($row['Descripcion'], 0, 60, '...')) . '</p>';
                                 echo '</div>';
                                 echo '<div class="kanban-footer">';
                                 echo '<div class="asignado">' . htmlspecialchars($row['Turnado']) . '</div>';
@@ -139,8 +136,8 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '</div>';
                                 echo '<div class="card-body">';
                                 echo '<div class="tags"><span class="tag">#' . htmlspecialchars($row['Numero_servicio']) . '</span></div>';
-                                echo '<h4 class="titulo-servicio">' . substr(htmlspecialchars($row['Descripcion']), 0, 30) . '...</h4>';
-                                echo '<p class="descripcion">' . substr(htmlspecialchars($row['Descripcion']), 0, 60) . '...</p>';
+                                echo '<h4 class="titulo-servicio">' . htmlspecialchars(mb_strimwidth($row['Titulo'], 0, 30, '...')) . '</h4>';
+                                echo '<p class="descripcion">' . htmlspecialchars(mb_strimwidth($row['Descripcion'], 0, 60, '...')) . '</p>';
                                 echo '</div>';
                                 echo '<div class="kanban-footer">';
                                 echo '<div class="asignado">' . htmlspecialchars($row['Turnado']) . '</div>';
@@ -173,8 +170,8 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '</div>';
                                 echo '<div class="card-body">';
                                 echo '<div class="tags"><span class="tag">#' . htmlspecialchars($row['Numero_servicio']) . '</span></div>';
-                                echo '<h4 class="titulo-servicio">' . substr(htmlspecialchars($row['Descripcion']), 0, 30) . '...</h4>';
-                                echo '<p class="descripcion">' . substr(htmlspecialchars($row['Descripcion']), 0, 60) . '...</p>';
+                                echo '<h4 class="titulo-servicio">' . htmlspecialchars(mb_strimwidth($row['Titulo'], 0, 30, '...')) . '</h4>';
+                                echo '<p class="descripcion">' . htmlspecialchars(mb_strimwidth($row['Descripcion'], 0, 60, '...')) . '</p>';
                                 echo '</div>';
                                 echo '<div class="kanban-footer">';
                                 echo '<div class="asignado">' . htmlspecialchars($row['Turnado']) . '</div>';
@@ -190,64 +187,75 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
     </div>
 
     <!-- Modal Nueva Solicitud -->
-  <div id="nuevaSolicitudModal" class="modal">
-            <div class="modal-content">
-                <form id="solicitudForm" enctype="multipart/form-data">
-                    <div class="modal-header">
-                        <div>
-                            <div class="form-title">SEyT-SISNE-OVI-<span id="idServicio"></span></div>
-                            <div class="form-subtitle">SECRETARIA DE ECONOMÍA Y TRABAJO<br>UNIDAD DE INFORMÁTICA<br>ÁREA DE SOPORTE TÉCNICO</div>
-                        </div>
-                        <img src="https://ovi.economiaytrabajo.chiapas.gob.mx/static/LOGO.png" alt="Logo">
+    <div id="nuevaSolicitudModal" class="modal">
+        <div class="modal-content">
+            <form id="solicitudForm" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <div>
+                        <div class="form-title">SEyT-SISNE-OVI-<span id="idServicio"></span></div>
+                        <div class="form-subtitle">SECRETARIA DE ECONOMÍA Y TRABAJO<br>UNIDAD DE INFORMÁTICA<br>ÁREA DE SOPORTE TÉCNICO</div>
                     </div>
+                    <img src="https://ovi.economiaytrabajo.chiapas.gob.mx/static/LOGO.png" alt="Logo">
+                </div>
 
-                    <div class="form-group">
-                        <label for="descripcion">Descripción de servicio solicitado</label>
-                        <p>Por favor, de una descripción de su problema</p>
-                        <textarea id="descripcion" name="descripcion" required></textarea>
-                    </div>
+                <!-- NUEVO CAMPO: Título -->
+                <div class="form-group">
+                    <label for="titulo">Título del servicio solicitado</label>
+                    <p>Escriba un título breve y claro para identificar la solicitud</p>
+                    <input type="text" id="titulo" name="titulo" required>
+                </div>
 
-                    <div class="file-upload">
-                        <input type="file" id="archivo" name="archivo" style="display: none;">
-                        <label for="archivo" id="fileUploadLabel">Pulse aquí para subir un archivo</label>
-                        <span id="fileName" class="file-name"></span>
-                    </div>
+                <div class="form-group">
+                    <label for="descripcion">Descripción de servicio solicitado</label>
+                    <p>Por favor, de una descripción de su problema</p>
+                    <textarea id="descripcion" name="descripcion" required></textarea>
+                </div>
+
+                <div class="file-upload">
+                    <input type="file" id="archivo" name="archivo" style="display: none;">
+                    <label for="archivo" id="fileUploadLabel">Pulse aquí para subir un archivo</label>
+                    <span id="fileName" class="file-name"></span>
+                </div>
+                
+                <!-- Contenedor para arrastrar y soltar archivos -->
+                <div class="file-upload-container" id="fileUploadContainer">
+                    <div class="upload-icon">📁</div>
+                    <p class="upload-text">Arrastra tus archivos aquí</p>
+                    <p>o</p>
                     
-                    <!-- Contenedor para arrastrar y soltar archivos -->
-                    <div class="file-upload-container" id="fileUploadContainer">
-                        <div class="upload-icon">📁</div>
-                        <p class="upload-text">Arrastra tus archivos aquí</p>
-                        <p>o</p>
-                        
-                        <button type="button" class="browse-files-btn" id="browseFilesBtn">Seleccionar archivos</button>
-                        
-                        <p class="file-info">Formatos admitidos: PDF, JPG, PNG, DOCX (Máx. 10MB)</p>
-                        
-                        <div class="file-list" id="fileList"></div>
-                        
-                        <p class="success-message" id="successMessage">¡Archivo(s) seleccionado(s) con éxito!</p>
-                    </div>
+                    <button type="button" class="browse-files-btn" id="browseFilesBtn">Seleccionar archivos</button>
+                    
+                    <p class="file-info">Formatos admitidos: PDF, JPG, PNG, DOCX (Máx. 10MB)</p>
+                    
+                    <div class="file-list" id="fileList"></div>
+                    
+                    <p class="success-message" id="successMessage">¡Archivo(s) seleccionado(s) con éxito!</p>
+                </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="close-btn" id="cerrarModal">Cerrar</button>
-                        <button type="submit" class="submit-btn">Enviar</button>
-                    </div>
-                </form>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="close-btn" id="cerrarModal">Cerrar</button>
+                    <button type="submit" class="submit-btn">Enviar</button>
+                </div>
+            </form>
         </div>
+    </div>
 
     <!-- Modal de detalle -->
     <div id="detalleModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="cerrarModalDetalle()">×</span>
             <h3 id="detalleTitulo"></h3>
+            <p><strong>Título:</strong> <span id="detalleTituloServicio"></span></p>
             <p><strong>Estatus:</strong> <span id="detalleEstatus"></span></p>
             <p><strong>Turnado a:</strong> <span id="detalleTurnado"></span></p>
             <p><strong>Fecha de solicitud:</strong> <span id="detalleFecha"></span></p>
             <p><strong>Descripción completa:</strong></p>
             <p id="detalleDescripcion" style="white-space: pre-wrap;"></p>
+            <p><strong>Comentario de conclusión:</strong></p>
+            <p id="detalleComentario" style="white-space: pre-wrap;"></p>
         </div>
     </div>
+
     <!-- Modal Editar Servicio -->
     <div id="editarModal" class="modal">
         <div class="modal-content">
@@ -284,7 +292,5 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
     </div>
 
     <script src="./js/cliente.js"></script>
-
 </body>
-
 </html>

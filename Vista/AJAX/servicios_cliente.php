@@ -14,6 +14,7 @@ while ($row = $result->fetch_assoc()) {
         'id' => $row['Id_servicio'],
         'estatus' => $row['Estatus'],
         'numero' => $row['Numero_servicio'],
+        'titutlo' => $row['titulo'],
         'descripcion' => $row['Descripcion'],
         'turnado' => $row['Turnado'],
         'fecha' => $row['Fecha_solicitud']

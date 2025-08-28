@@ -64,23 +64,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Modal nueva solicitud
     const modal = document.getElementById("nuevaSolicitudModal");
-const idSpan = document.getElementById("idServicio"); // span donde se mostrará el ID
+    const idSpan = document.getElementById("idServicio"); // span donde se mostrará el ID
 
-document.getElementById("nuevaSolicitudBtn").addEventListener("click", () => {
-    fetch("ajax/obtener_siguiente_id.php") 
-        .then(response => response.text())
-        .then(data => {
-            idSpan.textContent = data;
-            modal.style.display = "block";
-        })
-        .catch(error => {
-            console.error("Error al obtener el ID:", error);
-            idSpan.textContent = "??";
-            modal.style.display = "block";
-        });
-});
-   document.getElementById("cerrarModal").addEventListener("click", () => modal.style.display = "none");
-
+    document.getElementById("nuevaSolicitudBtn").addEventListener("click", () => {
+        fetch("ajax/obtener_siguiente_id.php") 
+            .then(response => response.text())
+            .then(data => {
+                idSpan.textContent = data;
+                modal.style.display = "block";
+            })
+            .catch(error => {
+                console.error("Error al obtener el ID:", error);
+                idSpan.textContent = "??";
+                modal.style.display = "block";
+            });
+    });
+    
+    document.getElementById("cerrarModal").addEventListener("click", () => modal.style.display = "none");
 
     window.addEventListener("click", function (event) {
         if (event.target == modal) {
@@ -98,6 +98,13 @@ document.getElementById("nuevaSolicitudBtn").addEventListener("click", () => {
     document.getElementById("solicitudForm").addEventListener("submit", function (e) {
         e.preventDefault();
         const formData = new FormData(this);
+
+        // Validar que el título no esté vacío
+        const titulo = document.getElementById("titulo").value.trim();
+        if (!titulo) {
+            alert("Por favor, ingrese un título para la solicitud");
+            return;
+        }
 
         fetch("registrar_archivo.php", {
             method: "POST",
@@ -236,10 +243,12 @@ function verDetalle(elemento) {
             return;
         }
         document.getElementById('detalleTitulo').textContent = data.numero_servicio;
+        document.getElementById('detalleTituloServicio').textContent = data.Titulo; // NUEVO: mostrar título
         document.getElementById('detalleEstatus').textContent = data.estatus;
         document.getElementById('detalleTurnado').textContent = data.turnado;
         document.getElementById('detalleFecha').textContent = data.fecha;
         document.getElementById('detalleDescripcion').textContent = data.descripcion;
+        document.getElementById('detalleComentario').textContent = data.comentario || 'Sin comentarios'; // Comentario de conclusión
 
         document.getElementById('detalleModal').style.display = 'block';
     });
@@ -274,12 +283,6 @@ function filtrarColumna(tipo) {
     document.getElementById("filtroMenu").style.display = "none"; 
 }
 
-
-function abrirChatModal(idServicio) {
-    document.getElementById("chatIdServicio").value = idServicio;
-    document.getElementById("chatModal").style.display = "block";
-    cargarMensajes(idServicio);
-}
 let intervaloChat = null;
 
 function abrirChatModal(idServicio) {
@@ -305,11 +308,6 @@ function cerrarChatModal() {
     }
 }
 
-
-function cerrarChatModal() {
-    document.getElementById("chatModal").style.display = "none";
-}
-
 async function cargarMensajes(idServicio) {
     const res = await fetch(`AJAX/obtener_mensaje.php?id_servicio=${idServicio}`);
     const mensajes = await res.json();
@@ -326,6 +324,7 @@ async function cargarMensajes(idServicio) {
 
     contenedor.scrollTop = contenedor.scrollHeight;
 }
+
 document.addEventListener("DOMContentLoaded", function () {
   actualizarServicios(); // Cargar al inicio
   setInterval(actualizarServicios, 10000); // Cada 10 segundos
@@ -371,26 +370,26 @@ function crearTarjeta(servicio) {
   }
 
   div.innerHTML = `
-    <div class="card-header">
-      <div class="left">
-        <span class="badge ${servicio.estatus}">${servicio.estatus.toUpperCase()}</span>
-        <small class="created">📅 ${fecha}</small>
-      </div>
-      <span class="dots" onclick="toggleMenu(this)">⋮</span>
-      <ul class="dropdown">
-        ${opciones}
-      </ul>
+  <div class="card-header">
+    <div class="left">
+      <span class="badge ${servicio.estatus}">${servicio.estatus.toUpperCase()}</span>
+      <small class="created">📅 ${fecha}</small>
     </div>
-    <div class="card-body">
-      <div class="tags"><span class="tag">#${servicio.numero}</span></div>
-      <h4 class="titulo-servicio">${servicio.descripcion.slice(0, 30)}...</h4>
-      <p class="descripcion">${servicio.descripcion.slice(0, 60)}...</p>
-    </div>
-    <div class="kanban-footer">
-      <div class="asignado">${servicio.turnado}</div>
-      <button class="btn chat">💬</button>
-    </div>
-  `;
+    <span class="dots" onclick="toggleMenu(this)">⋮</span>
+    <ul class="dropdown">
+      ${opciones}
+    </ul>
+  </div>
+  <div class="card-body">
+    <div class="tags"><span class="tag">#${servicio.numero}</span></div>
+    <h4 class="titulo-servicio">${servicio.titulo || '(Sin título)'}</h4>
+    <p class="descripcion">${servicio.descripcion || '(Sin descripción)'}</p>
+  </div>
+  <div class="kanban-footer">
+    <div class="asignado">${servicio.turnado}</div>
+    <button class="btn chat">💬</button>
+  </div>
+`;
 
   // Chat
   div.querySelector('.chat').addEventListener('click', () => {
@@ -399,6 +398,7 @@ function crearTarjeta(servicio) {
 
   return div;
 }
+
 function editarDescripcion(elemento) {
     const card = elemento.closest('.kanban-card');
     const idServicio = card.getAttribute('data-id');
@@ -427,87 +427,87 @@ function editarDescripcion(elemento) {
     });
 }
 
- // JavaScript para manejar la funcionalidad de subida de archivos
-        document.addEventListener('DOMContentLoaded', function() {
-            const fileUploadLabel = document.getElementById('fileUploadLabel');
-            const fileUploadContainer = document.getElementById('fileUploadContainer');
-            const browseFilesBtn = document.getElementById('browseFilesBtn');
-            const fileInput = document.getElementById('archivo');
-            const fileList = document.getElementById('fileList');
-            const successMessage = document.getElementById('successMessage');
+// JavaScript para manejar la funcionalidad de subida de archivos
+document.addEventListener('DOMContentLoaded', function() {
+    const fileUploadLabel = document.getElementById('fileUploadLabel');
+    const fileUploadContainer = document.getElementById('fileUploadContainer');
+    const browseFilesBtn = document.getElementById('browseFilesBtn');
+    const fileInput = document.getElementById('archivo');
+    const fileList = document.getElementById('fileList');
+    const successMessage = document.getElementById('successMessage');
+    
+    // Mostrar el contenedor de carga al hacer clic en el label
+    fileUploadLabel.addEventListener('click', function(e) {
+        e.preventDefault();
+        fileUploadContainer.classList.add('active');
+    });
+    
+    // Permitir hacer clic en el botón de "Seleccionar archivos"
+    browseFilesBtn.addEventListener('click', function() {
+        fileInput.click();
+    });
+    
+    // Manejar la selección de archivos
+    fileInput.addEventListener('change', function(e) {
+        handleFiles(e.target.files);
+    });
+    
+    // Funcionalidad de arrastrar y soltar
+    fileUploadContainer.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        fileUploadContainer.classList.add('drag-over');
+    });
+    
+    fileUploadContainer.addEventListener('dragleave', function() {
+        fileUploadContainer.classList.remove('drag-over');
+    });
+    
+    fileUploadContainer.addEventListener('drop', function(e) {
+        e.preventDefault();
+        fileUploadContainer.classList.remove('drag-over');
+        
+        if (e.dataTransfer.files.length) {
+            handleFiles(e.dataTransfer.files);
+            // También actualizamos el input file original
+            fileInput.files = e.dataTransfer.files;
+        }
+    });
+    
+    // Función para manejar los archivos seleccionados
+    function handleFiles(files) {
+        fileList.innerHTML = '';
+        
+        if (files.length > 0) {
+            successMessage.style.display = 'block';
             
-            // Mostrar el contenedor de carga al hacer clic en el label
-            fileUploadLabel.addEventListener('click', function(e) {
-                e.preventDefault();
-                fileUploadContainer.classList.add('active');
-            });
-            
-            // Permitir hacer clic en el botón de "Seleccionar archivos"
-            browseFilesBtn.addEventListener('click', function() {
-                fileInput.click();
-            });
-            
-            // Manejar la selección de archivos
-            fileInput.addEventListener('change', function(e) {
-                handleFiles(e.target.files);
-            });
-            
-            // Funcionalidad de arrastrar y soltar
-            fileUploadContainer.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                fileUploadContainer.classList.add('drag-over');
-            });
-            
-            fileUploadContainer.addEventListener('dragleave', function() {
-                fileUploadContainer.classList.remove('drag-over');
-            });
-            
-            fileUploadContainer.addEventListener('drop', function(e) {
-                e.preventDefault();
-                fileUploadContainer.classList.remove('drag-over');
+            // Mostrar cada archivo en la lista
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
                 
-                if (e.dataTransfer.files.length) {
-                    handleFiles(e.dataTransfer.files);
-                    // También actualizamos el input file original
-                    fileInput.files = e.dataTransfer.files;
-                }
-            });
-            
-            // Función para manejar los archivos seleccionados
-            function handleFiles(files) {
-                fileList.innerHTML = '';
+                const fileName = document.createElement('span');
+                fileName.className = 'file-name';
+                fileName.textContent = file.name;
                 
-                if (files.length > 0) {
-                    successMessage.style.display = 'block';
-                    
-                    // Mostrar cada archivo en la lista
-                    for (let i = 0; i < files.length; i++) {
-                        const file = files[i];
-                        const fileItem = document.createElement('div');
-                        fileItem.className = 'file-item';
-                        
-                        const fileName = document.createElement('span');
-                        fileName.className = 'file-name';
-                        fileName.textContent = file.name;
-                        
-                        const fileRemove = document.createElement('span');
-                        fileRemove.className = 'file-remove';
-                        fileRemove.textContent = 'X';
-                        fileRemove.addEventListener('click', function() {
-                            fileItem.remove();
-                            // Limpiar el input file
-                            fileInput.value = '';
-                            if (fileList.children.length === 0) {
-                                successMessage.style.display = 'none';
-                            }
-                        });
-                        
-                        fileItem.appendChild(fileName);
-                        fileItem.appendChild(fileRemove);
-                        fileList.appendChild(fileItem);
+                const fileRemove = document.createElement('span');
+                fileRemove.className = 'file-remove';
+                fileRemove.textContent = 'X';
+                fileRemove.addEventListener('click', function() {
+                    fileItem.remove();
+                    // Limpiar el input file
+                    fileInput.value = '';
+                    if (fileList.children.length === 0) {
+                        successMessage.style.display = 'none';
                     }
-                } else {
-                    successMessage.style.display = 'none';
-                }
+                });
+                
+                fileItem.appendChild(fileName);
+                fileItem.appendChild(fileRemove);
+                fileList.appendChild(fileItem);
             }
-        });
+        } else {
+            successMessage.style.display = 'none';
+        }
+    }
+});

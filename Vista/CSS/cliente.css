@@ -1229,3 +1229,32 @@ textarea {
             font-weight: 500;
             display: none;
         }
+
+/* diseño caja de texto titulo */
+.form-group {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.form-group input[type="text"] {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid #d1d1d1;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.form-group input[type="text"]:focus {
+  border-color: #4CAF50;  /* Verde elegante */
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.4);
+}
