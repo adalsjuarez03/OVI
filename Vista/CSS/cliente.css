@@ -726,7 +726,7 @@ textarea {
   font-size: 14px;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: nowarp;
 }
 
 .created {
@@ -735,6 +735,7 @@ textarea {
   margin-left: 10px;
 }
 
+/* ESTILOS PARA TARJETAS SEGÚN ESTADO - MODIFICADO */
 .kanban-card.concluido {
   background: #e8fce8;
   border-left: 6px solid #2ecc71;
@@ -748,6 +749,36 @@ textarea {
 .kanban-card.cancelado {
   background: #ffe6e6;
   border-left: 6px solid #e74c3c;
+}
+
+.kanban-card.no-asignado {
+  background: #ffffff;
+  border-left: 6px solid #7f8c8d;
+}
+
+.badge.concluido {
+  background-color: #e8fce8;
+  border-left: 6px solid #2ecc71;
+  padding-left: 8px;
+}
+
+.badge.asignado {
+  background-color: #fff9e6;
+  border-left: 6px solid #961ba1;
+  padding-left: 8px;
+}
+
+.badge.cancelado {
+  background-color: #ffe6e6;
+  border-left: 6px solid #e74c3c;
+  padding-left: 8px;
+}
+
+.badge.no-asignado {
+  background-color: #f0f0f0;
+  border-left: 6px solid #7f8c8d;
+  padding-left: 8px;
+  color: #333;
 }
 
 /* Estilo para el sidebar colapsable */

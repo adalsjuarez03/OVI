@@ -32,11 +32,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Cambiar visualmente la tarjeta
-                        card.setAttribute("data-status", "cancelado");
-                        const badge = card.querySelector(".badge");
-                        badge.textContent = "CANCELADO";
-                        badge.className = "badge cancelado";
+                        // Cambiar visualmente la tarjeta usando la función
+                        actualizarEstadoTarjeta(card, "cancelado");
 
                         // Mover la tarjeta a la columna correspondiente
                         document.querySelector("#concluido-col .kanban-list").appendChild(card);
@@ -212,6 +209,57 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// Función para actualizar el estado visual de las tarjetas
+function actualizarEstadoTarjeta(card, nuevoEstado) {
+    // Remover todas las clases de estado existentes
+    card.classList.remove("concluido", "asignado", "cancelado", "no-asignado");
+    
+    // Añadir la nueva clase de estado
+    card.classList.add(nuevoEstado);
+    
+    // Actualizar el atributo data-status
+    card.setAttribute("data-status", nuevoEstado);
+    
+    // Actualizar el badge
+    const badge = card.querySelector(".badge");
+    if (badge) {
+        badge.textContent = nuevoEstado.toUpperCase();
+        badge.className = "badge " + nuevoEstado;
+    }
+}
+
+// Función para cancelar servicio desde el menú desplegable
+function cancelarServicio(elemento) {
+    const card = elemento.closest('.kanban-card');
+    const id = card.getAttribute('data-id');
+
+    if (confirm("¿Estás seguro de que deseas cancelar este servicio?")) {
+        fetch("AJAX/cancelar_servicio.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: "id=" + encodeURIComponent(id),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Cambiar visualmente la tarjeta usando la función
+                actualizarEstadoTarjeta(card, "cancelado");
+
+                // Mover la tarjeta a la columna correspondiente
+                document.querySelector("#concluido-col .kanban-list").appendChild(card);
+                
+                // Ocultar el menú desplegable
+                card.querySelector('.dropdown').style.display = 'none';
+            } else {
+                alert("Error al cancelar: " + (data.error || "Desconocido"));
+            }
+        })
+        .catch(err => {
+            alert("Error de red: " + err.message);
+        });
+    }
+}
+
 // Funciones varias
 function cerrarModalEditar() {
     document.getElementById('editarModal').style.display = 'none';
@@ -365,7 +413,7 @@ function crearTarjeta(servicio) {
   if (servicio.estatus === "no-asignado" || servicio.estatus === "asignado") {
     opciones += `
       <li onclick="editarDescripcion(this)">✏️ Editar</li>
-      <li>❌ Cancelar</li>
+      <li onclick="cancelarServicio(this)">❌ Cancelar</li>
     `;
   }
 
