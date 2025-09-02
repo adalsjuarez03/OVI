@@ -1,0 +1,131 @@
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            padding: 30px;
+            color: #333;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .btn-abrir-modal {
+            background-color: #4e73df;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+            border-collapse: collapse;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4e73df;
+            color: white;
+        }
+
+        td {
+            background-color: #fff;
+            font-size: 14px;
+        }
+
+        .acciones {
+            display: flex;
+            gap: 10px;
+        }
+
+        .acciones button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .descargar { background: #e8fce8; color: #2ecc71; }
+        .editar { background: #e6f0ff; color: #2980b9; }
+        .eliminar { background: #ffe6e6; color: #e74c3c; }
+
+        dialog {
+            border: none;
+            border-radius: 12px;
+            padding: 20px;
+            width: 400px;
+            max-width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .modal-actions button {
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .guardar {
+            background-color: #4e73df;
+            color: white;
+        }
+
+        .cancelar {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        a.btn-volver {
+            display: inline-block;
+            background-color: #f1f3f9;
+            color: #333;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: background 0.2s ease;
+        }
+
+        a.btn-volver:hover {
+            background-color: #15a74dff;
+            color: white;
+        }
