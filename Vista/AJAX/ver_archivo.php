@@ -34,18 +34,18 @@ $rol_usuario = $_SESSION['rol'];
 $conexion = Conexion::conectar();
 
 if ($rol_usuario === 'cliente') {
-    // CAMBIO: Los clientes pueden descargar cualquier archivo (no solo los suyos)
+    // CAMBIO: Los clientes pueden ver cualquier archivo (no solo los suyos)
     $stmt = $conexion->prepare("SELECT Archivo_ruta, Archivo_nombre FROM Servicios WHERE Id_servicio = ? AND Archivo_ruta = ?");
     $stmt->bind_param("is", $id_servicio, $archivo_ruta);
 } elseif ($rol_usuario === 'administrador' || $rol_usuario === 'admin') {
-    // Los administradores pueden descargar cualquier archivo
+    // Los administradores pueden ver cualquier archivo
     $stmt = $conexion->prepare("SELECT Archivo_ruta, Archivo_nombre FROM Servicios WHERE Id_servicio = ? AND Archivo_ruta = ?");
     $stmt->bind_param("is", $id_servicio, $archivo_ruta);
 } else {
     // Rol no autorizado
     http_response_code(403);
     header('Content-Type: application/json');
-    echo json_encode(['error' => 'Rol no autorizado para descargar archivos']);
+    echo json_encode(['error' => 'Rol no autorizado para ver archivos']);
     exit;
 }
 
@@ -75,10 +75,11 @@ if (!file_exists($archivo_completo)) {
 $tipo_mime = mime_content_type($archivo_completo);
 $tamaño = filesize($archivo_completo);
 
-// Configurar headers para la descarga
+// Configurar headers para VISUALIZAR (no descargar)
 header('Content-Type: ' . $tipo_mime);
 header('Content-Length: ' . $tamaño);
-header('Content-Disposition: attachment; filename="' . $nombre_original . '"');
+// NO usar Content-Disposition: attachment para que se abra en el navegador
+header('Content-Disposition: inline; filename="' . $nombre_original . '"');
 header('Cache-Control: must-revalidate');
 header('Pragma: public');
 header('Expires: 0');

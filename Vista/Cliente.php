@@ -27,6 +27,44 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
         select {
             font-family: 'Montserrat', sans-serif;
         }
+        
+        /* Estilos para indicador de archivo */
+        .tag.archivo {
+            background-color: #2196F3;
+            color: white;
+            font-size: 12px;
+        }
+        
+        /* Estilos adicionales para archivos en modal detalle */
+        .archivo-link {
+            color: #2196F3;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        
+        .archivo-link:hover {
+            text-decoration: underline;
+        }
+        
+        .btn-descargar {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .info-group {
+            margin-bottom: 15px;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            display: inline-block;
+            margin-right: 10px;
+        }
     </style>
 </head>
 
@@ -68,7 +106,7 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                         <div class="dropdown-filtro">
                             <button class="btn filter" onclick="toggleFiltroMenu()">🎯 Filtros</button>
                             <ul class="filtro-menu" id="filtroMenu">
-                                <li onclick="filtrarColumna('todas')">🔄 Mostrar todas</li>
+                                <li onclick="filtrarColumna('todas')">📄 Mostrar todas</li>
                                 <li onclick="filtrarColumna('no-asignado')">🕓 No asignado</li>
                                 <li onclick="filtrarColumna('asignado')">🛠 Asignado</li>
                                 <li onclick="filtrarColumna('concluido')">✅ Concluido / ❌ Cancelado</li>
@@ -94,6 +132,9 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
                                 echo '<ul class="dropdown">';
                                 echo '<li onclick="verDetalle(this)">👁 Ver</li>';
+                                if (!empty($row['Archivo_ruta'])) {
+                                    echo '<li onclick="abrirArchivo(\'' . htmlspecialchars($row['Archivo_ruta']) . '\', \'' . htmlspecialchars($row['Archivo_nombre']) . '\')">🔎 Ver archivo</li>';
+                                }
                                 if ($row['Estatus'] !== 'cancelado' && $row['Estatus'] !== 'concluido') {
                                     echo '<li onclick="editarDescripcion(this)">✏️ Editar</li>';
                                     echo '<li>❌ Cancelar</li>';
@@ -101,7 +142,12 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '</ul>';
                                 echo '</div>';
                                 echo '<div class="card-body">';
-                                echo '<div class="tags"><span class="tag">#' . htmlspecialchars($row['Numero_servicio']) . '</span></div>';
+                                echo '<div class="tags">';
+                                echo '<span class="tag">#' . htmlspecialchars($row['Numero_servicio']) . '</span>';
+                                if (!empty($row['Archivo_ruta'])) {
+                                    echo '<span class="tag archivo" title="Tiene archivo adjunto">🔎</span>';
+                                }
+                                echo '</div>';
                                 echo '<h4 class="titulo-servicio">' . htmlspecialchars(mb_strimwidth($row['Titulo'], 0, 30, '...')) . '</h4>';
                                 echo '<p class="descripcion">' . htmlspecialchars(mb_strimwidth($row['Descripcion'], 0, 60, '...')) . '</p>';
                                 echo '</div>';
@@ -128,6 +174,9 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
                                 echo '<ul class="dropdown">';
                                 echo '<li onclick="verDetalle(this)">👁 Ver</li>';
+                                if (!empty($row['Archivo_ruta'])) {
+                                    echo '<li onclick="abrirArchivo(\'' . htmlspecialchars($row['Archivo_ruta']) . '\', \'' . htmlspecialchars($row['Archivo_nombre']) . '\')">🔎 Ver archivo</li>';
+                                }
                                 if ($row['Estatus'] !== 'cancelado' && $row['Estatus'] !== 'concluido') {
                                     echo '<li onclick="editarDescripcion(this)">✏️ Editar</li>';
                                     echo '<li>❌ Cancelar</li>';
@@ -135,7 +184,12 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '</ul>';
                                 echo '</div>';
                                 echo '<div class="card-body">';
-                                echo '<div class="tags"><span class="tag">#' . htmlspecialchars($row['Numero_servicio']) . '</span></div>';
+                                echo '<div class="tags">';
+                                echo '<span class="tag">#' . htmlspecialchars($row['Numero_servicio']) . '</span>';
+                                if (!empty($row['Archivo_ruta'])) {
+                                    echo '<span class="tag archivo" title="Tiene archivo adjunto">🔎</span>';
+                                }
+                                echo '</div>';
                                 echo '<h4 class="titulo-servicio">' . htmlspecialchars(mb_strimwidth($row['Titulo'], 0, 30, '...')) . '</h4>';
                                 echo '<p class="descripcion">' . htmlspecialchars(mb_strimwidth($row['Descripcion'], 0, 60, '...')) . '</p>';
                                 echo '</div>';
@@ -162,6 +216,9 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '<span class="dots" onclick="toggleMenu(this)">⋮</span>';
                                 echo '<ul class="dropdown">';
                                 echo '<li onclick="verDetalle(this)">👁 Ver</li>';
+                                if (!empty($row['Archivo_ruta'])) {
+                                    echo '<li onclick="abrirArchivo(\'' . htmlspecialchars($row['Archivo_ruta']) . '\', \'' . htmlspecialchars($row['Archivo_nombre']) . '\')">🔎 Ver archivo</li>';
+                                }
                                 if ($row['Estatus'] !== 'cancelado' && $row['Estatus'] !== 'concluido') {
                                     echo '<li onclick="editarDescripcion(this)">✏️ Editar</li>';
                                     echo '<li>❌ Cancelar</li>';
@@ -169,7 +226,12 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                                 echo '</ul>';
                                 echo '</div>';
                                 echo '<div class="card-body">';
-                                echo '<div class="tags"><span class="tag">#' . htmlspecialchars($row['Numero_servicio']) . '</span></div>';
+                                echo '<div class="tags">';
+                                echo '<span class="tag">#' . htmlspecialchars($row['Numero_servicio']) . '</span>';
+                                if (!empty($row['Archivo_ruta'])) {
+                                    echo '<span class="tag archivo" title="Tiene archivo adjunto">🔎</span>';
+                                }
+                                echo '</div>';
                                 echo '<h4 class="titulo-servicio">' . htmlspecialchars(mb_strimwidth($row['Titulo'], 0, 30, '...')) . '</h4>';
                                 echo '<p class="descripcion">' . htmlspecialchars(mb_strimwidth($row['Descripcion'], 0, 60, '...')) . '</p>';
                                 echo '</div>';
@@ -219,7 +281,7 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
                 
                 <!-- Contenedor para arrastrar y soltar archivos -->
                 <div class="file-upload-container" id="fileUploadContainer">
-                    <div class="upload-icon">📁</div>
+                    <div class="upload-icon">📎</div>
                     <p class="upload-text">Arrastra tus archivos aquí</p>
                     <p>o</p>
                     
@@ -251,6 +313,18 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
             <p><strong>Fecha de solicitud:</strong> <span id="detalleFecha"></span></p>
             <p><strong>Descripción completa:</strong></p>
             <p id="detalleDescripcion" style="white-space: pre-wrap;"></p>
+            
+            <!-- Sección de archivo -->
+            <div class="info-group" id="archivoSection" style="display: none;">
+                <span class="info-label"><strong>🔎 Archivo adjunto:</strong></span>
+                <div id="archivoInfo">
+                    <a href="#" id="archivoLink" target="_blank" class="archivo-link">
+                        <span id="archivoNombre"></span>
+                    </a>
+                    <button type="button" class="btn-descargar" id="descargarBtn">📥 Descargar</button>
+                </div>
+            </div>
+            
             <p><strong>Comentario de conclusión:</strong></p>
             <p id="detalleComentario" style="white-space: pre-wrap;"></p>
         </div>
