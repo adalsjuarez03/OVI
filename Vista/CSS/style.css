@@ -1089,3 +1089,123 @@ body {
             font-weight: 500;
             display: none;
         }
+/* Estilos para archivos en tarjetas Kanban */
+.tag.archivo {
+  background-color: #f39c12;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: 5px;
+}
+
+/* Estilos para el modal de detalle con archivo */
+.archivo-link {
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: #3498db;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+.archivo-link:hover {
+  background-color: #2980b9;
+  text-decoration: none;
+  color: white;
+}
+
+.btn-descargar {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-descargar:hover {
+  background-color: #219a52;
+}
+
+#archivoInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+/* Estilos para el indicador de archivo en dropdown */
+.dropdown li[onclick*="abrirArchivo"] {
+  color: #f39c12;
+  font-weight: bold;
+}
+
+.dropdown li[onclick*="abrirArchivo"]:hover {
+  background-color: #fdf2e9;
+  color: #e67e22;
+}
+
+/* Estilos adicionales para la subida de archivos */
+.file-upload-container {
+  transition: all 0.3s ease;
+}
+
+.file-upload-container:hover {
+  border-color: #3498db;
+  background-color: #f8f9fa;
+}
+
+.file-item {
+  font-size: 14px;
+}
+
+.file-item .file-name {
+  color: #2c3e50;
+  flex-grow: 1;
+}
+
+.file-item .file-remove:hover {
+  background-color: #f44336;
+  color: white;
+  border-radius: 2px;
+  padding: 2px 4px;
+}
+
+/* Animación para cuando se sube un archivo exitosamente */
+@keyframes fadeInSuccess {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.success-message {
+  animation: fadeInSuccess 0.5s ease-in-out;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  #archivoInfo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .archivo-link {
+    margin-right: 0;
+    margin-bottom: 5px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .btn-descargar {
+    width: 100%;
+  }
+}

@@ -11,7 +11,7 @@ $conn = Conexion::conectar();
 if (isset($_POST['id'])) {
     $id = intval($_POST['id']);
 
-    // Seleccionamos también Comentario_conclusion
+    // Seleccionamos también Comentario_conclusion y campos de archivo
     $stmt = $conn->prepare("SELECT * FROM Servicios WHERE Id_servicio = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
@@ -43,13 +43,15 @@ if (isset($_POST['id'])) {
         $fecha_formateada = date('d/m/Y H:i', strtotime($row['Fecha_solicitud']));
 
         echo json_encode([
-            'Titulo' => $row['Titulo'], // Ahora se incluye el Titulo
+            'Titulo' => $row['Titulo'],
             'numero_servicio' => $numero_servicio,
             'estatus' => $estatus_legible,
             'turnado' => $row['Turnado'],
             'fecha' => $fecha_formateada,
             'descripcion' => $row['Descripcion'],
-            'comentario' => $row['Comentario_conclusion'] // <-- agregado
+            'comentario' => $row['Comentario_conclusion'],
+            'archivo_ruta' => $row['Archivo_ruta'] ?? '',
+            'archivo_nombre' => $row['Archivo_nombre'] ?? ''
         ]);
     } else {
         echo json_encode(['error' => 'Servicio no encontrado']);

@@ -26,6 +26,30 @@ document.addEventListener("click", function (e) {
   }
 });
 
+// ========== FUNCIONES PARA ARCHIVOS ==========
+function abrirArchivo(rutaArchivo, nombreArchivo) {
+  if (!rutaArchivo) {
+    alert('No hay archivo adjunto para este servicio.');
+    return;
+  }
+  const url = '../' + rutaArchivo;
+  window.open(url, '_blank');
+}
+
+function descargarArchivo(rutaArchivo, nombreArchivo) {
+  if (!rutaArchivo) {
+    alert('No hay archivo para descargar.');
+    return;
+  }
+  const url = '../' + rutaArchivo;
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = nombreArchivo || 'archivo';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
 // ========== DRAG AND DROP ==========
 function allowDrop(ev) { ev.preventDefault(); }
 function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
@@ -54,6 +78,7 @@ function dropAtEnd(ev) {
   const container = ev.target.closest(".kanban-container");
   if (container && dragged) container.appendChild(dragged);
 }
+
 // ========== BOTÓN ABRIR NUEVA SOLICITUD + SUBIDA DE ARCHIVOS ==========
 document.addEventListener("DOMContentLoaded", function () {
   const modal = document.getElementById("nuevaSolicitudModal");
@@ -70,18 +95,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (!modal || !btn || !closeBtn || !fileInput) return;
 
-  // Abrir modal
   btn.addEventListener("click", () => { modal.style.display = "block"; });
-
-  // Cerrar modal
   closeBtn.addEventListener("click", () => { modal.style.display = "none"; });
-
-  // Cerrar modal al dar clic fuera
   window.addEventListener("click", function (event) {
     if (event.target === modal) modal.style.display = "none";
   });
 
-  // Mostrar nombre del archivo seleccionado
   if (fileInput && fileName) {
     fileInput.addEventListener("change", function () {
       fileName.textContent = this.files.length > 0 ? this.files[0].name : "";
@@ -89,7 +108,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Abrir contenedor al hacer clic en label
   if (fileUploadLabel && fileUploadContainer) {
     fileUploadLabel.addEventListener('click', function(e){
       e.preventDefault();
@@ -97,33 +115,28 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Abrir explorador de archivos desde botón
   if (browseFilesBtn && fileInput) {
     browseFilesBtn.addEventListener('click', function(){ fileInput.click(); });
   }
 
-  // Drag & Drop
   if (fileUploadContainer) {
     fileUploadContainer.addEventListener('dragover', function(e){
       e.preventDefault();
       fileUploadContainer.classList.add('drag-over');
     });
-
     fileUploadContainer.addEventListener('dragleave', function(){
       fileUploadContainer.classList.remove('drag-over');
     });
-
     fileUploadContainer.addEventListener('drop', function(e){
       e.preventDefault();
       fileUploadContainer.classList.remove('drag-over');
       if (e.dataTransfer.files.length) {
-        fileInput.files = e.dataTransfer.files; // actualizar input
+        fileInput.files = e.dataTransfer.files;
         handleFiles(e.dataTransfer.files);
       }
     });
   }
 
-  // Función para mostrar archivos en lista
   function handleFiles(files) {
     if (!fileList || !successMessage) return;
     fileList.innerHTML = '';
@@ -156,7 +169,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Enviar formulario
   if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -169,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          alert("Solicitud guardada con éxito!");
+          alert("Solicitud guardada con éxito!" + (data.archivo_subido ? " Archivo subido correctamente." : ""));
           location.reload();
         } else {
           alert("Error: " + data.error);
@@ -189,8 +201,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-
-// ========== DETALLE DEL SERVICIO CON COMENTARIO ==========
+// ========== DETALLE DEL SERVICIO CON COMENTARIO Y ARCHIVO ==========
 function verDetalle(idServicio) {
   fetch('./AJAX/getservicio.php', {
     method: 'POST',
@@ -207,23 +218,28 @@ function verDetalle(idServicio) {
     document.getElementById('detalleFecha').textContent = data.fecha;
     document.getElementById('detalleDescripcion').textContent = data.descripcion;
 
-    // Mostrar comentario si existe
     let comentarioDiv = document.getElementById('detalleComentario');
-    if (!comentarioDiv) {
-      comentarioDiv = document.createElement('div');
-      comentarioDiv.id = 'detalleComentario';
-      comentarioDiv.style.marginTop = '15px';
-      comentarioDiv.style.padding = '10px';
-      comentarioDiv.style.borderTop = '1px solid #ccc';
-      comentarioDiv.style.whiteSpace = 'pre-wrap';
-      document.querySelector('#detalleModal .modal-body').appendChild(comentarioDiv);
+    comentarioDiv.textContent = data.comentario || 'Sin comentarios';
+
+    const archivoSection = document.getElementById('archivoSection');
+    const archivoNombre = document.getElementById('archivoNombre');
+    const archivoLink = document.getElementById('archivoLink');
+    const descargarBtn = document.getElementById('descargarBtn');
+
+    if (data.archivo_ruta && data.archivo_ruta.trim() !== '') {
+      archivoSection.style.display = 'block';
+      archivoNombre.textContent = data.archivo_nombre || 'Archivo adjunto';
+      archivoLink.href = '../' + data.archivo_ruta;
+      descargarBtn.onclick = function() {
+        descargarArchivo(data.archivo_ruta, data.archivo_nombre);
+      };
+    } else {
+      archivoSection.style.display = 'none';
     }
-    comentarioDiv.textContent = data.comentario ? `💬 Comentario del administrador: ${data.comentario}` : '';
 
     document.getElementById('detalleModal').style.display = 'block';
   });
 }
-
 function cerrarModalDetalle() { document.getElementById("detalleModal").style.display = "none"; }
 window.addEventListener("click", function (event) {
   const modal = document.getElementById("detalleModal");
@@ -279,44 +295,35 @@ function cerrarChatModal() { document.getElementById("chatModal").style.display 
 async function cargarMensajes(idServicio) {
   const res = await fetch(`AJAX/obtener_mensaje.php?id_servicio=${idServicio}`);
   const mensajes = await res.json();
-
   const contenedor = document.getElementById("chatMensajes");
   contenedor.innerHTML = "";
-
   mensajes.forEach(m => {
     const div = document.createElement("div");
     div.className = `chat-mensaje ${m.emisor}`;
     div.innerText = `${m.emisor === 'admin' ? 'Tú' : 'Cliente'}: ${m.mensaje}`;
     contenedor.appendChild(div);
   });
-
   contenedor.scrollTop = contenedor.scrollHeight;
 }
 
-// ========== CONCLUIR SERVICIO CON COMENTARIO (OBLIGATORIO) ==========
+// ========== CONCLUIR SERVICIO CON COMENTARIO ==========
 let servicioConcluirId = null;
-
 function concluirServicio(idServicio) {
   servicioConcluirId = idServicio;
   document.getElementById("comentarioConcluir").value = "";
   document.getElementById("concluirModal").style.display = "block";
 }
-
 function cerrarConcluirModal() {
   document.getElementById("concluirModal").style.display = "none";
 }
-
-// Botón de enviar y concluir (comentario obligatorio)
 const enviarConcluirBtn = document.getElementById("enviarConcluirBtn");
 if (enviarConcluirBtn) {
   enviarConcluirBtn.addEventListener("click", function () {
     const comentario = document.getElementById("comentarioConcluir").value.trim();
-
     if (!comentario) {
       alert("Por favor, escribe un comentario antes de concluir el servicio.");
-      return; // no permite enviar
+      return;
     }
-
     if (!servicioConcluirId) return;
 
     fetch('./AJAX/concluir_servicio.php', {
@@ -330,11 +337,9 @@ if (enviarConcluirBtn) {
         const card = document.getElementById('servicio-' + servicioConcluirId);
         card.classList.remove('no-asignado', 'asignado');
         card.classList.add('concluido');
-
         const badge = card.querySelector('.badge');
         badge.textContent = 'CONCLUIDO';
         badge.className = 'badge concluido';
-
         cerrarConcluirModal();
         alert('Servicio concluido con comentario.');
       } else {
@@ -347,8 +352,6 @@ if (enviarConcluirBtn) {
     });
   });
 }
-
-// Cerrar modal al hacer clic fuera
 window.addEventListener("click", function (event) {
   const modal = document.getElementById("concluirModal");
   if (event.target === modal) modal.style.display = "none";
@@ -359,7 +362,6 @@ function toggleFiltroMenu() {
   const menu = document.getElementById("filtroMenu");
   if (menu) menu.style.display = (menu.style.display === "block") ? "none" : "block";
 }
-
 window.addEventListener("click", function(e) {
   const menu = document.getElementById("filtroMenu");
   const filtroBtn = document.querySelector(".btn.filter");
@@ -367,32 +369,18 @@ window.addEventListener("click", function(e) {
     menu.style.display = "none";
   }
 });
-
-// FILTRO DE TARJETAS
 function filtrarColumna(tipo) {
   const tarjetas = document.querySelectorAll('.kanban-card');
-
   tarjetas.forEach(card => {
     const estatus = card.getAttribute('data-status').toLowerCase();
-
     switch(tipo) {
-      case 'todas':
-        card.style.display = 'block';
-        break;
-      case 'no-asignado':
-        card.style.display = (estatus === 'no-asignado' || estatus === 'no asignado') ? 'block' : 'none';
-        break;
-      case 'asignado':
-        card.style.display = (estatus === 'asignado') ? 'block' : 'none';
-        break;
-      case 'concluido':
-        card.style.display = (estatus === 'concluido' || estatus === 'cancelado') ? 'block' : 'none';
-        break;
-      default:
-        card.style.display = 'block';
+      case 'todas': card.style.display = 'block'; break;
+      case 'no-asignado': card.style.display = (estatus === 'no-asignado' || estatus === 'no asignado') ? 'block' : 'none'; break;
+      case 'asignado': card.style.display = (estatus === 'asignado') ? 'block' : 'none'; break;
+      case 'concluido': card.style.display = (estatus === 'concluido' || estatus === 'cancelado') ? 'block' : 'none'; break;
+      default: card.style.display = 'block';
     }
   });
-
   const menu = document.getElementById("filtroMenu");
   if (menu) menu.style.display = 'none';
 }
@@ -400,7 +388,6 @@ function filtrarColumna(tipo) {
 // ========== ASIGNAR SERVICIO ==========
 function asignarServicio(idServicio) {
   if (!confirm("¿Deseas asignarte este servicio?")) return;
-
   fetch("./AJAX/asignar_servicio.php", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -412,11 +399,9 @@ function asignarServicio(idServicio) {
       const card = document.getElementById("servicio-" + idServicio);
       card.classList.remove("no-asignado");
       card.classList.add("asignado");
-
       const badge = card.querySelector(".badge");
       badge.textContent = "ASIGNADO";
       badge.className = "badge asignado";
-
       alert("Servicio asignado correctamente.");
     } else {
       alert("Error al asignar: " + data.error);

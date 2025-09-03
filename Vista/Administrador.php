@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') {
   header('Location: Login.php');
   exit();
@@ -24,12 +25,12 @@ if ($usuario_id) {
 }
 
 /**
- * ✅ Consulta de servicios corregida:
+ *  Consulta de servicios corregida:
  * - Siempre muestra "no-asignado", "concluido", "cancelado"
  * - Solo muestra "asignado" que correspondan al admin logueado
  */
 $consulta = $conexion->prepare("
-    SELECT Id_servicio, Estatus, Numero_servicio, Titulo, Descripcion, Turnado, Fecha_solicitud, Comentario_conclusion 
+    SELECT Id_servicio, Estatus, Numero_servicio, Titulo, Descripcion, Turnado, Fecha_solicitud, Comentario_conclusion, Archivo_ruta, Archivo_nombre
     FROM Servicios 
     WHERE 
         Estatus IN ('no-asignado', 'concluido', 'cancelado')
@@ -39,7 +40,7 @@ $consulta = $conexion->prepare("
 $consulta->bind_param("s", $nombreAdministrador);
 $consulta->execute();
 $consulta->store_result();
-$consulta->bind_result($id, $estatus, $numero, $titulo, $descripcion, $turnado, $fecha, $comentario);
+$consulta->bind_result($id, $estatus, $numero, $titulo, $descripcion, $turnado, $fecha, $comentario, $archivo_ruta, $archivo_nombre);
 
 $servicios = [];
 
@@ -52,7 +53,9 @@ while ($consulta->fetch()) {
     'Descripcion' => $descripcion,
     'Turnado' => $turnado,
     'Fecha_solicitud' => $fecha,
-    'Comentario' => $comentario
+    'Comentario' => $comentario,
+    'Archivo_ruta' => $archivo_ruta,
+    'Archivo_nombre' => $archivo_nombre
   ];
 }
 ?>
@@ -191,49 +194,56 @@ while ($consulta->fetch()) {
           </div>
         </div>
 
-        <div class="kanban-container">
-          <?php foreach ($servicios as $servicio): ?>
-            <div class="kanban-card <?php echo strtolower($servicio['Estatus']); ?> "
-              data-status="<?php echo strtolower($servicio['Estatus']); ?>"
-              id="servicio-<?php echo $servicio['Id_servicio']; ?>"
-              draggable="true"
-              ondragstart="drag(event)">
-              
-              <div class="card-header">
-                <div class="left">
-                  <span class="badge <?php echo strtolower($servicio['Estatus']); ?>">
-                    <?php echo strtoupper($servicio['Estatus']); ?>
-                  </span>
-                  <small class="created">📅 <?php echo date("d/m/Y", strtotime($servicio['Fecha_solicitud'])); ?></small>
-                </div>
-                <span class="dots" onclick="toggleMenu(this)">⋮</span>
-                <ul class="dropdown">
-                  <li onclick="verDetalle(<?php echo $servicio['Id_servicio']; ?>)">👁 Ver</li>
-
-                  <?php if (strtolower($servicio['Estatus']) === 'no-asignado'): ?>
-                    <li onclick="asignarServicio(<?php echo $servicio['Id_servicio']; ?>)">✅ Asignar</li>
-                    <li onclick="concluirServicio(<?php echo $servicio['Id_servicio']; ?>)">✔️ Concluir</li>
-                  <?php elseif (strtolower($servicio['Estatus']) === 'asignado'): ?>
-                    <li onclick="concluirServicio(<?php echo $servicio['Id_servicio']; ?>)">✔️ Concluir</li>
-                  <?php endif; ?>
-                </ul>
-              </div>
-
-              <div class="card-body">
-                <div class="tags">
-                  <span class="tag">#<?php echo htmlspecialchars($servicio['Numero_servicio']); ?></span>
-                </div>
-                <h4 class="titulo-servicio"><?php echo htmlspecialchars($servicio['Titulo']); ?></h4>
-                <p class="descripcion"><?php echo htmlspecialchars(mb_strimwidth($servicio['Descripcion'], 0, 100, '...')); ?></p>
-              </div>
-
-              <div class="kanban-footer">
-                <div class="asignado"><?php echo htmlspecialchars($servicio['Turnado']); ?></div>
-                <button class="btn chat">💬</button>
-              </div>
-            </div>
-          <?php endforeach; ?>
+<div class="kanban-container">
+  <?php foreach ($servicios as $servicio): ?>
+    <div class="kanban-card <?php echo strtolower($servicio['Estatus']); ?> "
+      data-status="<?php echo strtolower($servicio['Estatus']); ?>"
+      id="servicio-<?php echo $servicio['Id_servicio']; ?>"
+      draggable="true"
+      ondragstart="drag(event)">
+      
+      <div class="card-header">
+        <div class="left">
+          <span class="badge <?php echo strtolower($servicio['Estatus']); ?>">
+            <?php echo strtoupper($servicio['Estatus']); ?>
+          </span>
+          <small class="created">📅 <?php echo date("d/m/Y", strtotime($servicio['Fecha_solicitud'])); ?></small>
         </div>
+        <span class="dots" onclick="toggleMenu(this)">⋮</span>
+        <ul class="dropdown">
+          <li onclick="verDetalle(<?php echo $servicio['Id_servicio']; ?>)">👁 Ver</li>
+          
+          <?php if (!empty($servicio['Archivo_ruta'])): ?>
+            <li onclick="abrirArchivo('<?php echo htmlspecialchars($servicio['Archivo_ruta']); ?>', '<?php echo htmlspecialchars($servicio['Archivo_nombre']); ?>')">📎 Ver archivo</li>
+          <?php endif; ?>
+
+          <?php if (strtolower($servicio['Estatus']) === 'no-asignado'): ?>
+            <li onclick="asignarServicio(<?php echo $servicio['Id_servicio']; ?>)">✅ Asignar</li>
+            <li onclick="concluirServicio(<?php echo $servicio['Id_servicio']; ?>)">✔️ Concluir</li>
+          <?php elseif (strtolower($servicio['Estatus']) === 'asignado'): ?>
+            <li onclick="concluirServicio(<?php echo $servicio['Id_servicio']; ?>)">✔️ Concluir</li>
+          <?php endif; ?>
+        </ul>
+      </div>
+
+      <div class="card-body">
+        <div class="tags">
+          <span class="tag">#<?php echo htmlspecialchars($servicio['Numero_servicio']); ?></span>
+          <?php if (!empty($servicio['Archivo_ruta'])): ?>
+            <span class="tag archivo" title="Tiene archivo adjunto">📎</span>
+          <?php endif; ?>
+        </div>
+        <h4 class="titulo-servicio"><?php echo htmlspecialchars($servicio['Titulo']); ?></h4>
+        <p class="descripcion"><?php echo htmlspecialchars(mb_strimwidth($servicio['Descripcion'], 0, 100, '...')); ?></p>
+      </div>
+
+      <div class="kanban-footer">
+        <div class="asignado"><?php echo htmlspecialchars($servicio['Turnado']); ?></div>
+        <button class="btn chat">💬</button>
+      </div>
+    </div>
+  <?php endforeach; ?>
+</div>
 
       </section>
     </main>
@@ -291,47 +301,57 @@ while ($consulta->fetch()) {
       </form>
     </div>
   </div>
-
   <!-- Modal Detalle -->
-  <div id="detalleModal" class="modal">
-    <div class="modal-content">
-      <span class="close-btn" onclick="cerrarModalDetalle()">×</span>
-      <div class="modal-header">
-        <h2 id="detalleTitulo" class="titulo-modal"></h2>
+<div id="detalleModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="cerrarModalDetalle()">×</span>
+    <div class="modal-header">
+      <h2 id="detalleTitulo" class="titulo-modal"></h2>
+    </div>
+
+    <div class="modal-body">
+      <div class="info-group">
+        <span class="info-label"><strong>🟢 Estatus:</strong></span>
+        <span class="info-value" id="detalleEstatus"></span>
       </div>
 
-      <div class="modal-body">
-        <div class="info-group">
-          <span class="info-label"><strong>🟢 Estatus:</strong></span>
-          <span class="info-value" id="detalleEstatus"></span>
-        </div>
+      <div class="info-group">
+        <span class="info-label"><strong>👨‍💼 Turnado a:</strong></span>
+        <span class="info-value" id="detalleTurnado"></span>
+      </div>
 
-        <div class="info-group">
-          <span class="info-label"><strong>👨‍💼 Turnado a:</strong></span>
-          <span class="info-value" id="detalleTurnado"></span>
-        </div>
+      <div class="info-group">
+        <strong>📅 Fecha de solicitud:</strong>
+        <span class="info-value" id="detalleFecha"></span>
+      </div>
 
-        <div class="info-group">
-          <strong>📅 Fecha de solicitud:</strong>
-          <span class="info-value" id="detalleFecha"></span>
-        </div>
+      <div class="info-group">
+        <span class="info-label"><strong>📝 Descripción:</strong></span>
+        <div class="descripcion-detalle" id="detalleDescripcion" style="max-height: 300px; overflow-y: auto; white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
+      </div>
 
-        <div class="info-group">
-          <span class="info-label"><strong>📝 Descripción:</strong></span>
-          <div class="descripcion-detalle" id="detalleDescripcion" style="max-height: 300px; overflow-y: auto; white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
-        </div>
-
-        <div class="info-group">
-          <span class="info-label"><strong>💬 Comentario Admin:</strong></span>
-          <div class="comentario-detalle" id="detalleComentario" style="max-height: 150px; overflow-y: auto; white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
+      <!-- Sección de archivo -->
+      <div class="info-group" id="archivoSection" style="display: none;">
+        <span class="info-label"><strong>📎 Archivo adjunto:</strong></span>
+        <div id="archivoInfo">
+          <a href="#" id="archivoLink" target="_blank" class="archivo-link">
+            <span id="archivoNombre"></span>
+          </a>
+          <button type="button" class="btn-descargar" id="descargarBtn">📥 Descargar</button>
         </div>
       </div>
 
-      <div class="modal-footer">
-        <button class="submit-btn" onclick="cerrarModalDetalle()">Cerrar</button>
+      <div class="info-group">
+        <span class="info-label"><strong>💬 Comentario Admin:</strong></span>
+        <div class="comentario-detalle" id="detalleComentario" style="max-height: 150px; overflow-y: auto; white-space: pre-wrap; border: 1px solid #ccc; padding: 10px;"></div>
       </div>
     </div>
+
+    <div class="modal-footer">
+      <button class="submit-btn" onclick="cerrarModalDetalle()">Cerrar</button>
+    </div>
   </div>
+</div>
 
   <!-- Modal de Chat -->
   <div id="chatModal" class="modal">
