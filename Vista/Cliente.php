@@ -16,7 +16,7 @@ $nombreCliente = isset($_SESSION['nombre']) ? $_SESSION['nombre'] . ' ' . $_SESS
 
 <head>
     <meta charset="UTF-8">
-    <title>Panel Cliente</title>
+    <title>OVI-Cliente</title>
     <link rel="stylesheet" href="./CSS/cliente.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>

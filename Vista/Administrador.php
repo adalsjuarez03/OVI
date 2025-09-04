@@ -64,7 +64,7 @@ while ($consulta->fetch()) {
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Panel Administrador</title>
+  <title>OVI-Administrador</title>
   <link rel="stylesheet" href="./CSS/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
