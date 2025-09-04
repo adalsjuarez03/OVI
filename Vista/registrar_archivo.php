@@ -2,6 +2,9 @@
 session_start();
 require_once '../Modelo/Conexion.php'; 
 
+// Ajustar zona horaria a México
+date_default_timezone_set('America/Mexico_City');
+
 // Validar si es POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conexion = Conexion::conectar();

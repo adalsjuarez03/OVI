@@ -159,7 +159,7 @@ while ($consulta->fetch()) {
             <a href="#" id="togglePerfil">👨🏼‍💻 Mi perfil</a>
             <ul class="submenu" id="submenuPerfil">
               <li><a href="edit_profile.php">✏️ Editar</a></li>
-              <li><a href="misdocumentos.php">📄 Mis documentos</a></li>
+              <li><a href="#">📄 Mis documentos</a></li>
             </ul>
           </li>
           <li class="menu-separator"><a href="Cliente.php">📋 Servicios</a></li>
